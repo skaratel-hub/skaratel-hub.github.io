@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#1e2b3c">
+<title>Заплетая Языки · Скороговорки</title>
+<style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; overscroll-behavior: none; }
+    body {
+        font-family: 'Segoe UI', 'Roboto', system-ui, -apple-system, sans-serif;
+        background: linear-gradient(145deg, #1e2b3c 0%, #0f1a26 100%);
+        min-height: 100dvh;
+        display: flex; align-items: center; justify-content: center;
+        padding: 1rem;
+        -webkit-tap-highlight-color: transparent;
+        -webkit-user-select: none; user-select: none;
+    }
+    .game-container {
+        max-width: 900px; width: 100%;
+        background: rgba(22, 34, 50, 0.85);
+        backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+        border-radius: 2.5rem;
+        box-shadow: 0 25px 50px -8px rgba(0,0,0,0.8), inset 0 2px 4px rgba(255,255,255,0.06);
+        padding: 1.5rem 1.5rem 2rem;
+        border: 1px solid rgba(120,180,255,0.2);
+    }
+    h1 {
+        text-align: center; font-weight: 600; font-size: 2rem;
+        color: #f0e9d8;
+        text-shadow: 0 4px 10px rgba(0,0,0,0.6), 0 0 20px rgba(150,210,255,0.3);
+        margin-bottom: 0.25rem; word-break: break-word;
+    }
+    .subhead {
+        text-align: center; color: #9bb8da; font-size: 0.9rem;
+        margin-bottom: 1.25rem; opacity: 0.9;
+    }
+    .level-panel { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.6rem; margin-bottom: 1.25rem; }
+    .level-btn {
+        background: #273b53; border: none; padding: 0.7rem 1.3rem; border-radius: 3rem;
+        font-size: 1rem; font-weight: 600; color: #d9e6f2; cursor: pointer;
+        transition: all 0.15s ease;
+        box-shadow: 0 5px 0 #0e141c, 0 4px 12px rgba(0,0,0,0.5);
+        border: 1px solid rgba(200,225,255,0.15);
+        flex: 1 1 auto; min-width: 100px; touch-action: manipulation;
+    }
+    .level-btn:active { transform: translateY(3px); box-shadow: 0 2px 0 #0e141c; }
+    .level-btn.active {
+        background: #4f7aa3; color: #fff;
+        box-shadow: 0 5px 0 #1e3142, 0 0 18px #5f9bd6;
+        border-color: #aad0ff;
+    }
+    .phrase-card {
+        background: #e9eef3;
+        background-image: radial-gradient(circle at 20% 30%, rgba(255,255,255,0.9) 0%, #d6e2ed 100%);
+        border-radius: 2rem; padding: 1.8rem 1.4rem; margin: 1rem 0 1.25rem;
+        box-shadow: inset 0 -5px 0 #b0c2d4, 0 15px 25px -10px black;
+        border: 1px solid rgba(255,255,255,0.7);
+        min-height: 200px; display: flex; align-items: center; justify-content: center;
+        transition: transform 0.15s; position: relative; overflow: hidden;
+    }
+    .phrase-card::before, .phrase-card::after {
+        position: absolute; font-size: 3.5rem; color: #a0b8d0;
+        opacity: 0.35; font-family: Georgia, serif; line-height: 1;
+    }
+    .phrase-card::before { content: "«"; top: 2px; left: 14px; }
+    .phrase-card::after  { content: "»"; bottom: -6px; right: 14px; }
+    .phrase-text {
+        font-size: 1.35rem; line-height: 1.5; font-weight: 600; color: #142433;
+        text-align: center; word-break: break-word; z-index: 2;
+        font-family: Georgia, 'Times New Roman', serif; padding: 0 0.3rem;
+    }
+    .empty-phrase { font-size: 1.1rem; color: #4e6379; font-style: italic; font-weight: 400; }
+    .action-area { display: flex; flex-direction: column; gap: 0.8rem; }
+    .btn-row { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+    .btn-main, .btn-edit, .btn-share {
+        border: none; border-radius: 2rem; font-weight: 700; cursor: pointer;
+        transition: all 0.12s ease; display: inline-flex; align-items: center; justify-content: center;
+        gap: 0.35rem; touch-action: manipulation; flex: 1 1 100px; min-height: 46px;
+    }
+    .btn-main {
+        background: linear-gradient(145deg, #ffd966, #e6b12e);
+        padding: 0.85rem 1.3rem; font-size: 1.1rem; color: #1e2b3c;
+        box-shadow: 0 6px 0 #8f6f1a, 0 6px 16px rgba(0,0,0,0.6);
+        border: 1px solid #ffe69b; flex: 1 1 140px;
+    }
+    .btn-main:active { transform: translateY(4px); box-shadow: 0 2px 0 #8f6f1a; }
+    .btn-edit, .btn-share {
+        background: #3a506b; border: 1px solid #6c8dad;
+        padding: 0.85rem 0.9rem; font-size: 0.95rem; color: #d9e6f2;
+        box-shadow: 0 6px 0 #16212d, 0 6px 16px rgba(0,0,0,0.5);
+    }
+    .btn-share { background: #2f4a3f; border-color: #5a8f7a; box-shadow: 0 6px 0 #14211b, 0 6px 16px rgba(0,0,0,0.5); }
+    .btn-edit:active, .btn-share:active { transform: translateY(4px); box-shadow: 0 2px 0 #16212d; }
+    .stats {
+        display: flex; align-items: center; justify-content: space-between; gap: 0.8rem;
+        background: #172534; padding: 0.6rem 1rem; border-radius: 2rem;
+        box-shadow: inset 0 2px 6px #0a1017, 0 4px 10px black;
+        border: 1px solid #2e4a66; font-weight: 600; color: #b8d0e8;
+        flex-wrap: wrap; font-size: 0.9rem;
+    }
+    .stats span { display: flex; align-items: center; gap: 0.35rem; }
+    .stats .badge {
+        background: #f5c542; color: #1e2b3c; padding: 0.15rem 0.8rem;
+        border-radius: 2rem; font-weight: 800; font-size: 1.1rem;
+        min-width: 2.4rem; text-align: center; box-shadow: inset 0 -2px 0 #a8841c;
+    }
+    .reset-link {
+        background: none; border: none; color: #92b5d9; font-size: 0.85rem;
+        text-decoration: underline dotted; cursor: pointer; padding: 0.3rem 0.4rem; font-weight: 500;
+    }
+    /* Модалки */
+    .modal-overlay {
+        position: fixed; inset: 0; background: rgba(0,0,0,0.78);
+        backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+        display: none; align-items: flex-end; justify-content: center;
+        z-index: 100; padding: 0;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal {
+        background: #1b2a3b; border-radius: 2rem 2rem 0 0; width: 100%;
+        max-height: 92dvh; overflow-y: auto;
+        padding: 1.5rem 1.2rem calc(1.5rem + env(safe-area-inset-bottom, 0px));
+        border: 1px solid #3f5f7f; border-bottom: none;
+        box-shadow: 0 -20px 60px rgba(0,0,0,0.9); -webkit-overflow-scrolling: touch;
+    }
+    @media (min-width: 700px) {
+        .modal-overlay { align-items: center; padding: 1.5rem; }
+        .modal { border-radius: 2.5rem; max-width: 1000px; border-bottom: 1px solid #3f5f7f; padding: 2rem; }
+    }
+    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.2rem; gap: 1rem; }
+    .modal-header h2 { color: #f0e9d8; font-size: 1.4rem; font-weight: 600; }
+    .close-modal {
+        background: #3a506b; border: none; color: #fff; width: 42px; height: 42px;
+        border-radius: 50%; font-size: 1.3rem; cursor: pointer;
+        box-shadow: 0 3px 0 #16212d; display: flex; align-items: center; justify-content: center;
+        flex-shrink: 0; touch-action: manipulation;
+    }
+    .close-modal:active { transform: translateY(2px); box-shadow: 0 1px 0 #16212d; }
+    .tabs { display: flex; gap: 0.4rem; margin-bottom: 1.2rem; overflow-x: auto; padding-bottom: 0.2rem; }
+    .tab-btn {
+        background: #273b53; border: 1px solid #3f5f7f; padding: 0.55rem 1.1rem;
+        border-radius: 3rem; font-size: 0.95rem; font-weight: 600; color: #c4d9ee;
+        cursor: pointer; white-space: nowrap; touch-action: manipulation; flex-shrink: 0;
+    }
+    .tab-btn.active { background: #4f7aa3; color: #fff; border-color: #aad0ff; box-shadow: 0 0 12px rgba(95,155,214,0.6); }
+    .tab-content { display: none; } .tab-content.active { display: block; }
+    .phrase-list {
+        display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;
+        max-height: 30dvh; overflow-y: auto; padding-right: 0.3rem;
+    }
+    .phrase-item {
+        background: #e9eef3; border-radius: 1rem; padding: 0.7rem 0.9rem;
+        display: flex; align-items: flex-start; justify-content: space-between; gap: 0.6rem;
+        box-shadow: inset 0 -2px 0 #b0c2d4; font-size: 0.92rem; line-height: 1.4;
+        color: #142433; font-family: Georgia, serif; font-weight: 500;
+    }
+    .phrase-item .text { flex: 1; word-break: break-word; }
+    .phrase-item .del-btn {
+        background: #c0392b; border: none; color: #fff; width: 30px; height: 30px;
+        border-radius: 50%; cursor: pointer; font-size: 1rem; flex-shrink: 0;
+        display: flex; align-items: center; justify-content: center;
+        box-shadow: 0 2px 0 #7a241b; touch-action: manipulation; font-weight: 700;
+    }
+    .phrase-item .del-btn:active { transform: translateY(1px); box-shadow: 0 1px 0 #7a241b; }
+    .empty-note { color: #7f9ab8; font-style: italic; padding: 1rem; text-align: center; font-size: 0.9rem; }
+    .add-form { display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: stretch; }
+    .add-form textarea {
+        flex: 1 1 100%; background: #0f1a26; border: 1px solid #3f5f7f;
+        border-radius: 1rem; padding: 0.7rem 0.9rem; color: #e9eef3; font-size: 0.95rem;
+        font-family: inherit; resize: vertical; min-height: 54px; outline: none;
+        -webkit-appearance: none; user-select: text; -webkit-user-select: text;
+    }
+    .add-form textarea:focus { border-color: #f5c542; box-shadow: 0 0 0 3px rgba(245,197,66,0.2); }
+    .btn-save {
+        background: linear-gradient(145deg, #ffd966, #e6b12e);
+        border: none; padding: 0.65rem 1.5rem; border-radius: 1rem;
+        font-size: 0.98rem; font-weight: 700; color: #1e2b3c; cursor: pointer;
+        box-shadow: 0 4px 0 #8f6f1a; white-space: nowrap; touch-action: manipulation; width: 100%;
+    }
+    .btn-save:active { transform: translateY(3px); box-shadow: 0 1px 0 #8f6f1a; }
+    .save-html-box { margin-top: 1.2rem; padding: 1rem; background: #0f1a26; border: 1px solid #3f5f7f; border-radius: 1.2rem; }
+    .save-html-box label { display: block; color: #f5c542; font-weight: 700; margin-bottom: 0.5rem; font-size: 0.95rem; }
+    .save-html-row { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+    .save-html-row input {
+        flex: 1 1 100%; background: #1b2a3b; border: 1px solid #3f5f7f;
+        border-radius: 0.8rem; padding: 0.7rem 0.9rem; color: #e9eef3; font-size: 0.95rem;
+        outline: none; font-family: inherit; -webkit-appearance: none;
+        user-select: text; -webkit-user-select: text;
+    }
+    .save-html-hint { margin-top: 0.5rem; color: #7f9ab8; font-size: 0.78rem; }
+    .modal-footer { margin-top: 1.2rem; display: flex; flex-direction: column; gap: 0.7rem; border-top: 1px solid #2b4058; padding-top: 1rem; }
+    .btn-reset-all {
+        background: #8a2f2f; border: none; color: #fff; padding: 0.7rem 1.2rem;
+        border-radius: 1rem; font-size: 0.9rem; font-weight: 600; cursor: pointer;
+        box-shadow: 0 4px 0 #4d1a1a; touch-action: manipulation; width: 100%;
+    }
+    .btn-reset-all:active { transform: translateY(2px); box-shadow: 0 2px 0 #4d1a1a; }
+    .modal-hint { color: #7f9ab8; font-size: 0.8rem; text-align: center; }
+    .footer-note { margin-top: 1.2rem; text-align: center; font-size: 0.8rem; color: #5f7d9c; border-top: 1px solid #2b4058; padding-top: 1rem; }
+    /* QR */
+    .qr-body { display: flex; flex-direction: column; align-items: center; gap: 1rem; }
+    .qr-canvas-wrap { background: #fff; border-radius: 1.2rem; padding: 1rem; box-shadow: 0 10px 30px rgba(0,0,0,0.6); display: inline-block; }
+    #qrCanvas { display: block; width: 260px; height: 260px; image-rendering: pixelated; }
+    @media (max-width: 380px) { #qrCanvas { width: 220px; height: 220px; } }
+    .qr-url-row { display: flex; gap: 0.5rem; width: 100%; flex-wrap: wrap; }
+    .qr-url-row input {
+        flex: 1 1 100%; background: #0f1a26; border: 1px solid #3f5f7f;
+        border-radius: 0.8rem; padding: 0.7rem 0.9rem; color: #e9eef3; font-size: 0.9rem;
+        outline: none; font-family: 'Consolas', monospace; user-select: text; -webkit-user-select: text;
+    }
+    .qr-actions { display: flex; gap: 0.5rem; width: 100%; flex-wrap: wrap; }
+    .qr-actions button { flex: 1 1 130px; border: none; padding: 0.8rem 1rem; border-radius: 1rem; font-size: 0.95rem; font-weight: 700; cursor: pointer; touch-action: manipulation; }
+    .qr-actions .qr-download { background: linear-gradient(145deg, #ffd966, #e6b12e); color: #1e2b3c; box-shadow: 0 4px 0 #8f6f1a; }
+    .qr-actions .qr-copy { background: #3a506b; color: #d9e6f2; box-shadow: 0 4px 0 #16212d; }
+    .qr-actions button:active { transform: translateY(3px); box-shadow: 0 1px 0 #16212d; }
+    .qr-note { font-size: 0.82rem; color: #7f9ab8; text-align: center; line-height: 1.4; }
+    .toast {
+        position: fixed; left: 50%; bottom: 30px;
+        transform: translateX(-50%) translateY(20px);
+        background: #f5c542; color: #1e2b3c; padding: 0.8rem 1.4rem;
+        border-radius: 2rem; font-weight: 700; font-size: 0.9rem;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.6); opacity: 0; pointer-events: none;
+        transition: all 0.3s; z-index: 300; max-width: 90vw; text-align: center;
+    }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+    @media (min-width: 700px) {
+        .game-container { padding: 2rem 2rem 2.5rem; border-radius: 3.5rem; }
+        h1 { font-size: 2.6rem; }
+        .subhead { font-size: 1rem; margin-bottom: 1.75rem; }
+        .level-panel { gap: 0.9rem; margin-bottom: 2rem; }
+        .level-btn { padding: 0.8rem 1.8rem; font-size: 1.15rem; box-shadow: 0 8px 0 #0e141c, 0 6px 16px rgba(0,0,0,0.5); }
+        .phrase-card { border-radius: 2.5rem; padding: 2.5rem 2rem; min-height: 220px; }
+        .phrase-card::before, .phrase-card::after { font-size: 5rem; }
+        .phrase-card::before { top: 5px; left: 25px; }
+        .phrase-card::after { bottom: -10px; right: 25px; }
+        .phrase-text { font-size: 1.75rem; }
+        .empty-phrase { font-size: 1.5rem; }
+        .action-area { flex-direction: row; align-items: center; justify-content: space-between; }
+        .btn-row { flex: 0 1 auto; }
+        .btn-main { flex: 0 1 auto; padding: 1rem 2.5rem; font-size: 1.4rem; box-shadow: 0 12px 0 #8f6f1a, 0 8px 20px rgba(0,0,0,0.6); }
+        .btn-edit, .btn-share { flex: 0 1 auto; padding: 1rem 1.4rem; font-size: 1.05rem; box-shadow: 0 8px 0 #16212d, 0 6px 16px rgba(0,0,0,0.5); }
+        .stats { padding: 0.7rem 1.6rem; border-radius: 3rem; font-size: 1rem; }
+        .stats .badge { font-size: 1.4rem; min-width: 3rem; }
+        .reset-link { font-size: 0.9rem; }
+        .modal-header h2 { font-size: 1.8rem; }
+        .tabs { gap: 0.6rem; margin-bottom: 1.5rem; }
+        .tab-btn { padding: 0.7rem 1.6rem; font-size: 1.05rem; }
+        .phrase-list { max-height: 35vh; gap: 0.6rem; }
+        .phrase-item { padding: 0.9rem 1.2rem; font-size: 1rem; }
+        .phrase-item .del-btn { width: 32px; height: 32px; }
+        .add-form { flex-wrap: nowrap; }
+        .add-form textarea { flex: 1 1 300px; min-height: 60px; padding: 0.9rem 1.2rem; font-size: 1rem; }
+        .btn-save { width: auto; padding: 0.8rem 2rem; font-size: 1.05rem; box-shadow: 0 6px 0 #8f6f1a; }
+        .save-html-row { flex-wrap: nowrap; }
+        .save-html-row input { flex: 1 1 220px; font-size: 1rem; }
+        .modal-footer { flex-direction: row; justify-content: space-between; align-items: center; }
+        .btn-reset-all { width: auto; }
+        .footer-note { margin-top: 1.8rem; font-size: 0.9rem; padding-top: 1.4rem; }
+        #qrCanvas { width: 300px; height: 300px; }
+        .qr-url-row input { flex: 1 1 220px; }
+        .qr-actions button { flex: 0 1 auto; }
+    }
+    @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+</style>
+</head>
+<body>
+    <div class="game-container">
+        <h1>Заплетая Языки</h1>
+        <div class="subhead">🎯 Скороговорки · три уровня · случайный выбор</div>
+
+        <div class="level-panel">
+            <button class="level-btn active" data-level="easy">🌱 Лёгкий</button>
+            <button class="level-btn" data-level="medium">🔥 Средний</button>
+            <button class="level-btn" data-level="hard">💀 Сложный</button>
+        </div>
+
+        <div class="phrase-card">
+            <div class="phrase-text" id="phraseDisplay">Нажми «Новая», чтобы начать</div>
+        </div>
+
+        <div class="action-area">
+            <div class="btn-row">
+                <button class="btn-main" id="nextBtn">🎲 Новая</button>
+                <button class="btn-edit" id="openEditorBtn">✏️ Редактор</button>
+                <button class="btn-share" id="shareBtn">📤 Поделиться</button>
+                <button class="btn-share" id="qrBtn">📱 QR-код</button>
+            </div>
+            <div class="stats">
+                <span>📚 <span id="currentLevelLabel">Лёгкий</span></span>
+                <span>🎯 <span class="badge" id="counterBadge">0</span></span>
+                <button class="reset-link" id="resetCounterBtn">сброс</button>
+            </div>
+        </div>
+
+        <div class="footer-note">👅 Произносите вслух · не торопитесь</div>
+    </div>
+
+    <!-- Редактор -->
+    <div class="modal-overlay" id="editorOverlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>✏️ Редактор скороговорок</h2>
+                <button class="close-modal" id="closeEditorBtn">✕</button>
+            </div>
+            <div class="tabs">
+                <button class="tab-btn active" data-tab="easy">🌱 Лёгкий</button>
+                <button class="tab-btn" data-tab="medium">🔥 Средний</button>
+                <button class="tab-btn" data-tab="hard">💀 Сложный</button>
+            </div>
+            <div class="tab-content active" id="tab-easy">
+                <div class="phrase-list" id="list-easy"></div>
+                <div class="add-form">
+                    <textarea id="input-easy" placeholder="Новая скороговорка (лёгкий)..."></textarea>
+                    <button class="btn-save" data-save="easy">➕ Сохранить</button>
+                </div>
+            </div>
+            <div class="tab-content" id="tab-medium">
+                <div class="phrase-list" id="list-medium"></div>
+                <div class="add-form">
+                    <textarea id="input-medium" placeholder="Новая скороговорка (средний)..."></textarea>
+                    <button class="btn-save" data-save="medium">➕ Сохранить</button>
+                </div>
+            </div>
+            <div class="tab-content" id="tab-hard">
+                <div class="phrase-list" id="list-hard"></div>
+                <div class="add-form">
+                    <textarea id="input-hard" placeholder="Новая скороговорка (сложный)..."></textarea>
+                    <button class="btn-save" data-save="hard">➕ Сохранить</button>
+                </div>
+            </div>
+            <div class="save-html-box">
+                <label for="fileNameInput">💾 Сохранить как HTML-файл</label>
+                <div class="save-html-row">
+                    <input type="text" id="fileNameInput" value="zapletaya_yazyki.html" spellcheck="false">
+                    <button class="btn-save" id="downloadHtmlBtn">⬇️ Скачать</button>
+                </div>
+                <div class="save-html-hint">В новый файл попадут все текущие фразы (включая добавленные).</div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-reset-all" id="resetAllBtn">🗑️ Сбросить к заводским</button>
+                <span class="modal-hint">Изменения хранятся в этом браузере</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- QR -->
+    <div class="modal-overlay" id="qrOverlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>📱 QR-код для шаринга</h2>
+                <button class="close-modal" id="closeQrBtn">✕</button>
+            </div>
+            <div class="qr-body">
+                <div class="qr-canvas-wrap"><canvas id="qrCanvas" width="600" height="600"></canvas></div>
+                <div class="qr-url-row"><input type="text" id="qrUrlInput" readonly></div>
+                <div class="qr-actions">
+                    <button class="qr-download" id="qrDownloadBtn">⬇️ Скачать PNG</button>
+                    <button class="qr-copy" id="qrCopyBtn">📋 Копировать ссылку</button>
+                </div>
+                <div class="qr-note">Отсканируйте камерой телефона, чтобы открыть игру.<br>QR работает, если игра открыта по ссылке (http/https).</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+    (function() {
+        // ===== ЗАВОДСКАЯ БАЗА =====
+        const DEFAULT_PHRASES = {
+            easy: [
+                "У осы не усы, не усищи, а усики.",
+                "Мы ели ели ершей у ели, их еле еле у ели доели.",
+                "Дятел лечит древний дуб, добрый дятел дубу люб.",
+                "Становись скорей под душ, смой с ушей под душем тушь, смой и с шеи тушь под душем, после душа вытрись суше.",
+                "Хрущи хватают хвощи. Не всякому хрущу хватает по хвощу.",
+                "Зять вёз язя из-за Яузы. Зимы на Яузе изобилуют язями.",
+                "Коля клялся Клаве на коленях в кленовом лесу.",
+                "Дятел дуб долбил, да не додолбил.",
+                "Курьера курьер обгоняет в карьер.",
+                "Вахмистр с вахмистршей, ротмистр с ротмистршей.",
+                "Ложечка моя сиреневенькая, желобовыгибистая.",
+                "У нас во дворе—подворье погода размокропогодилась.",
+                "Стоит копна с подприкопеночком. Около кола колокола, около ворот коловорот.",
+                "Феофанова фуфайка Фефёле впору.",
+                "Саша шествовала по шоссе и сшибла сушку.",
+                "Пакет под попкорн.",
+                "А мне не до недомогания."
+            ],
+            medium: [
+                "Тридцать три корабля лавировали лавировали, да не вылавировали.",
+                "Кокосовары варят в скорококосоварках кокосовый сок.",
+                "Из кузова в кузов шла перегрузка арбузов; в грозу в грязи от груза арбузов развалился кузов.",
+                "Протокол про протокол протоколом запротоколировали, а потом потеряли протокол о протоколировании протокола.",
+                "Шишкосушильщик должен иметь опыт шишкосушения на шишкосушильном аппарате — а если не имеет, то пусть сначала потренируется на мандаринах.",
+                "Бесцеремонность, многоступенчатый, трансцендентность.",
+                "Флюорографист флюорографировал флюорографистку.",
+                "Хироманты и хирурги характеризуют хвори рахитов хрупкостью хрящей и хроническим хромосомным харакири.",
+                "Крокодил выкрал красивую крокодилицу на краю крутого кочкарника. Крокодилица подарила крокодилу крокодилят.",
+                "Шиншилла в шалаше сшила шиншиллятам по шесть шушунов, по шесть штанов, по шестнадцать шурапок.",
+                "Тщедушный, страждущий Кощей стащил ящик овощей.",
+                "Интервьюер интервента интервьюировал.",
+                "Варвара варенье доваривала, ворчала и приговаривала.",
+                "Рапортовал, да не дорапортовал, дорапортовывал, да зарапортовался.",
+                "Боронила борона по боронованному полю.",
+                "Ходит перепел между перепёлками со своими перепелятами.",
+                "Бомбардир бонбоньерками бомбардировал барышень.",
+                "Рыла свинья белорыла, тупорыла; полдвора рылом изрыла, вырыла, подрыла.",
+                "Наш голова вашего голову головой переголовал, перевыголовил.",
+                "Курфюрст скопроментировал ландскнехта.",
+                "Шестнадцать шли мышей и шесть нашли грошей, а мыши, что поплоше, шумливо шарят гроши.",
+                "Стаффордширский терьер ретив, а черношерстный ризеншнауцер резв.",
+                "В Кабардино-Балкарии валокордин из Болгарии.",
+                "Их пестициды не перепистицидят наши по своей пестицидности.",
+                "Работники предприятие приватизировали-приватизировали, да не выприватизировали.",
+                "Сиреневенькая зубовыковыривательница.",
+                "Столы белодубовые гладкотёсовыструганные.",
+                "Полосы про пылесосы поменяли на полуполосы про паласы.",
+                "Кокосовый сок вываривают кокосовары на скорококосоварках.",
+                "Летом летели пятилетние летяги на слёт клана летунув.",
+                "Патологоанатомы предполагали патологию параганглий."
+            ],
+            hard: [
+                "Регулировщик-лигуриец регулировал в Лигурии, лигурийцы регулировщика ругали, а он отвечал: „Я не ругаю, я регулирую!“",
+                "В недрах тундры выдры в гетрах тырят в вёдра ядра кедров — и делают из них настойку по семейному рецепту.",
+                "Разнервничавшегося конституционалиста нашли акклиматизировавшимся в Константинополе и заставили вести утреннюю зарядку.",
+                "Расконституционализироваться",
+                "Химическое соединение никотинамидадениндинуклеотидфосфатгидрин участвует в фотосинтезе растений.",
+                "С точки зрения банальной эрудиции не каждый индивидуум способен игнорировать тенденции парадоксальных эмоций.",
+                "Выдры в гетрах тырят в вёдра в недрах тундры ядра кедров.",
+                "Мысль о смысле бессмысленности бессмысленна, ведь смысл бессмысленности в ее бессмысленности, а осмысление бессмысленности обессмысливает бессмысленность.",
+                "Здоровому и нездоровое здорово, а нездоровому и здоровое нездорово.",
+                "Прецедент с претендентом.",
+                "Дифференциация интегрированного параллелограмма с точки зрения фантасмагорической апперцепции.",
+                "Не тот, товарищи, товарищу товарищ, кто при товарище товарищу товарищ, а тот, товарищи, товарищу товарищ, кто без товарища товарищу товарищ.",
+                "Деидеологизировали-деидеологизировали, и додеидеологизировались.",
+                "Я — вертикультяп. Могу вертикультяпнуться, могу вывертикультяпнуться."
+            ]
+        };
+
+        const STORAGE_KEY = 'zapletaya_yazyki_phrases_v1';
+        let phrases = loadPhrases();
+        let currentLevel = 'easy';
+        let currentPhrase = '';
+        let counter = 0;
+        let toastTimer = null;
+
+        const phraseDisplay = document.getElementById('phraseDisplay');
+        const nextBtn = document.getElementById('nextBtn');
+        const levelBtns = document.querySelectorAll('.level-btn');
+        const currentLevelLabel = document.getElementById('currentLevelLabel');
+        const counterBadge = document.getElementById('counterBadge');
+        const resetCounterBtn = document.getElementById('resetCounterBtn');
+        const openEditorBtn = document.getElementById('openEditorBtn');
+        const closeEditorBtn = document.getElementById('closeEditorBtn');
+        const editorOverlay = document.getElementById('editorOverlay');
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        const tabContents = document.querySelectorAll('.tab-content');
+        const saveButtons = document.querySelectorAll('.btn-save[data-save]');
+        const resetAllBtn = document.getElementById('resetAllBtn');
+        const fileNameInput = document.getElementById('fileNameInput');
+        const downloadHtmlBtn = document.getElementById('downloadHtmlBtn');
+        const shareBtn = document.getElementById('shareBtn');
+        const qrBtn = document.getElementById('qrBtn');
+        const qrOverlay = document.getElementById('qrOverlay');
+        const closeQrBtn = document.getElementById('closeQrBtn');
+        const qrCanvas = document.getElementById('qrCanvas');
+        const qrUrlInput = document.getElementById('qrUrlInput');
+        const qrDownloadBtn = document.getElementById('qrDownloadBtn');
+        const qrCopyBtn = document.getElementById('qrCopyBtn');
+        const toast = document.getElementById('toast');
+        const LEVEL_LABELS = { easy: 'Лёгкий', medium: 'Средний', hard: 'Сложный' };
+
+        function showToast(text) {
+            toast.textContent = text;
+            toast.classList.add('show');
+            clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => toast.classList.remove('show'), 2200);
+        }
+
+        function loadPhrases() {
+            try {
+                const raw = localStorage.getItem(STORAGE_KEY);
+                if (raw) {
+                    const parsed = JSON.parse(raw);
+                    if (parsed && Array.isArray(parsed.easy) && Array.isArray(parsed.medium) && Array.isArray(parsed.hard)) return parsed;
+                }
+            } catch (e) { console.warn(e); }
+            return JSON.parse(JSON.stringify(DEFAULT_PHRASES));
+        }
+        function savePhrases() {
+            try { localStorage.setItem(STORAGE_KEY, JSON.stringify(phrases)); }
+            catch (e) { console.warn(e); }
+        }
+        function getRandomPhrase(level, exclude = '') {
+            const list = phrases[level];
+            if (!list || list.length === 0) return '';
+            if (list.length === 1) return list[0];
+            let phrase, attempts = 0;
+            do { phrase = list[Math.floor(Math.random() * list.length)]; attempts++; }
+            while (phrase === exclude && attempts < 40);
+            return phrase;
+        }
+        function updateDisplay(phrase) {
+            if (phrase && phrase.trim() !== '') {
+                phraseDisplay.textContent = phrase;
+                phraseDisplay.classList.remove('empty-phrase');
+            } else {
+                phraseDisplay.textContent = 'Нет фраз для этого уровня. Добавьте их в редакторе.';
+                phraseDisplay.classList.add('empty-phrase');
+            }
+        }
+        function updateCounterUI() { counterBadge.textContent = counter; }
+        function updateLevelLabel() { currentLevelLabel.textContent = LEVEL_LABELS[currentLevel]; }
+        function setActiveLevelButton(level) {
+            levelBtns.forEach(btn => btn.classList.toggle('active', btn.dataset.level === level));
+        }
+        function showNextPhrase() {
+            currentPhrase = getRandomPhrase(currentLevel, currentPhrase);
+            updateDisplay(currentPhrase);
+            counter++;
+            updateCounterUI();
+            if (navigator.vibrate) navigator.vibrate(15);
+            const card = document.querySelector('.phrase-card');
+            card.style.transform = 'scale(0.98)';
+            setTimeout(() => { card.style.transform = 'scale(1)'; }, 100);
+        }
+        function resetCounter() { counter = 0; updateCounterUI(); }
+        function changeLevel(newLevel) {
+            if (newLevel === currentLevel) return;
+            currentLevel = newLevel;
+            setActiveLevelButton(currentLevel);
+            updateLevelLabel();
+            currentPhrase = getRandomPhrase(currentLevel, currentPhrase);
+            updateDisplay(currentPhrase);
+        }
+
+        function renderEditorLists() {
+            ['easy', 'medium', 'hard'].forEach(level => {
+                const container = document.getElementById('list-' + level);
+                container.innerHTML = '';
+                const list = phrases[level] || [];
+                if (list.length === 0) {
+                    const empty = document.createElement('div');
+                    empty.className = 'empty-note';
+                    empty.textContent = 'Пока нет фраз. Добавьте первую ниже.';
+                    container.appendChild(empty);
+                    return;
+                }
+                list.forEach((phrase, index) => {
+                    const item = document.createElement('div');
+                    item.className = 'phrase-item';
+                    const textSpan = document.createElement('span');
+                    textSpan.className = 'text';
+                    textSpan.textContent = phrase;
+                    const delBtn = document.createElement('button');
+                    delBtn.className = 'del-btn';
+                    delBtn.textContent = '✕';
+                    delBtn.addEventListener('click', () => deletePhrase(level, index));
+                    item.appendChild(textSpan);
+                    item.appendChild(delBtn);
+                    container.appendChild(item);
+                });
+            });
+        }
+        function addPhrase(level, text) {
+            const trimmed = text.trim();
+            if (!trimmed) { alert('Введите текст скороговорки.'); return false; }
+            if (phrases[level].includes(trimmed)) { alert('Такая скороговорка уже есть.'); return false; }
+            phrases[level].push(trimmed);
+            savePhrases();
+            renderEditorLists();
+            return true;
+        }
+        function deletePhrase(level, index) {
+            if (!confirm('Удалить эту скороговорку?')) return;
+            phrases[level].splice(index, 1);
+            savePhrases();
+            renderEditorLists();
+        }
+        function resetAllPhrases() {
+            if (!confirm('Сбросить все уровни к заводским? Ваши добавления будут потеряны.')) return;
+            phrases = JSON.parse(JSON.stringify(DEFAULT_PHRASES));
+            savePhrases();
+            renderEditorLists();
+            currentPhrase = getRandomPhrase(currentLevel, '');
+            updateDisplay(currentPhrase);
+        }
+        function openEditor() { renderEditorLists(); editorOverlay.classList.add('open'); document.body.style.overflow = 'hidden'; }
+        function closeEditor() { editorOverlay.classList.remove('open'); document.body.style.overflow = ''; }
+        function openQr() {
+            const url = getShareUrl();
+            qrUrlInput.value = url;
+            drawQr(url);
+            qrOverlay.classList.add('open');
+            document.body.style.overflow = 'hidden';
+        }
+        function closeQr() { qrOverlay.classList.remove('open'); document.body.style.overflow = ''; }
+
+        function buildHtmlWithCurrentPhrases() {
+            const docClone = document.documentElement.cloneNode(true);
+            const newPhrasesJSON = JSON.stringify(phrases, null, 12);
+            docClone.querySelectorAll('script').forEach(script => {
+                let code = script.textContent;
+                const marker = 'const DEFAULT_PHRASES =';
+                const idx = code.indexOf(marker);
+                if (idx === -1) return;
+                const endSearch = code.indexOf('};', idx);
+                if (endSearch === -1) return;
+                script.textContent = code.slice(0, idx) + `${marker} ${newPhrasesJSON};` + code.slice(endSearch + 2);
+            });
+            return '<!DOCTYPE html>\n' + docClone.outerHTML;
+        }
+        function downloadHtmlFile() {
+            let name = (fileNameInput.value || 'zapletaya_yazyki.html').trim();
+            if (!/\.html?$/i.test(name)) name += '.html';
+            let html;
+            try { html = buildHtmlWithCurrentPhrases(); }
+            catch (e) { alert('Не удалось сформировать HTML: ' + e.message); return; }
+            const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url; a.download = name;
+            document.body.appendChild(a); a.click(); document.body.removeChild(a);
+            setTimeout(() => URL.revokeObjectURL(url), 3000);
+            showToast('Файл сохранён');
+        }
+
+        function getShareUrl() {
+            if (location.protocol === 'http:' || location.protocol === 'https:') return location.origin + location.pathname;
+            return location.href;
+        }
+        async function doShare() {
+            const url = getShareUrl();
+            const shareData = { title: 'Заплетая Языки', text: 'Игра-тренажёр скороговорок. Попробуй повторить!', url };
+            if (navigator.share) {
+                try { await navigator.share(shareData); return; }
+                catch (e) { if (e.name === 'AbortError') return; console.warn(e); }
+            }
+            await copyToClipboard(url);
+        }
+        async function copyToClipboard(text) {
+            try {
+                if (navigator.clipboard && navigator.clipboard.writeText) await navigator.clipboard.writeText(text);
+                else {
+                    const ta = document.createElement('textarea');
+                    ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+                    document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
+                }
+                showToast('Ссылка скопирована 📋');
+                return true;
+            } catch (e) { showToast('Не удалось скопировать'); return false; }
+        }
+
+        // ===== QR-ГЕНЕРАТОР (встроенный) =====
+        const QR = (function() {
+            const PAD0 = 0xEC, PAD1 = 0x11, ECC_L = 0;
+            const RS_BLOCK_TABLE = [
+                [26,19,1],[44,34,1],[70,55,1],[100,80,1],[134,108,1],
+                [172,136,2],[196,156,2],[242,194,2],[292,232,2],[346,274,2]
+            ];
+            const ALIGNMENT_PATTERN_TABLE = [
+                [],[6,18],[6,22],[6,26],[6,30],[6,34],[6,22,38],[6,24,42],[6,26,46],[6,28,50]
+            ];
+            function getRSBlocks(v) { const r = RS_BLOCK_TABLE[v-1]; return { total: r[0], data: r[1], blocks: r[2] }; }
+            function getDataCapacity(v) { return getRSBlocks(v).data; }
+            function toUtf8Bytes(str) {
+                const bytes = [];
+                for (let i = 0; i < str.length; i++) {
+                    let c = str.charCodeAt(i);
+                    if (c < 0x80) bytes.push(c);
+                    else if (c < 0x800) bytes.push(0xC0 | (c>>6), 0x80 | (c&0x3F));
+                    else if (c >= 0xD800 && c < 0xDC00) {
+                        const c2 = str.charCodeAt(++i);
+                        const cp = 0x10000 + ((c-0xD800)<<10) + (c2-0xDC00);
+                        bytes.push(0xF0|(cp>>18), 0x80|((cp>>12)&0x3F), 0x80|((cp>>6)&0x3F), 0x80|(cp&0x3F));
+                    } else bytes.push(0xE0|(c>>12), 0x80|((c>>6)&0x3F), 0x80|(c&0x3F));
+                }
+                return bytes;
+            }
+            const EXP_TABLE = new Array(512), LOG_TABLE = new Array(256);
+            (function(){ let x=1; for(let i=0;i<255;i++){EXP_TABLE[i]=x;LOG_TABLE[x]=i;x<<=1;if(x&0x100)x^=0x11D;} for(let i=255;i<512;i++)EXP_TABLE[i]=EXP_TABLE[i-255]; })();
+            function gfMul(a,b){ if(a===0||b===0)return 0; return EXP_TABLE[LOG_TABLE[a]+LOG_TABLE[b]]; }
+            function rsComputeDivisor(degree){
+                const result = new Array(degree); result[degree-1]=1; let root=1;
+                for(let i=0;i<degree;i++){ for(let j=0;j<degree;j++){ result[j]=gfMul(result[j],root); if(j+1<degree)result[j]^=result[j+1]; } root=gfMul(root,2); }
+                return result;
+            }
+            function rsComputeRemainder(data,divisor){
+                const result = divisor.map(()=>0);
+                for(const b of data){ const factor=b^result.shift(); result.push(0); for(let i=0;i<divisor.length;i++)result[i]^=gfMul(divisor[i],factor); }
+                return result;
+            }
+            function getNumRawDataModules(v){ let r=(16*v+128)*v+64; if(v>=2){const n=Math.floor(v/7)+2;r-=(25*n-10)*n-55;if(v>=7)r-=36;} return r; }
+            function getNumDataCodewords(v){ return Math.floor(getNumRawDataModules(v)/8)-getEccCodewords(v); }
+            function getEccCodewords(v){ return RS_BLOCK_TABLE[v-1][0]-getRSBlocks(v).data; }
+            function buildMatrix(version,bytes){
+                const size = version*4+17;
+                const matrix = Array.from({length:size},()=>new Array(size).fill(null));
+                function setModule(x,y,d){ if(x<0||x>=size||y<0||y>=size)return; matrix[y][x]=d; }
+                function placeFinder(cx,cy){ for(let dy=-1;dy<=7;dy++)for(let dx=-1;dx<=7;dx++){ const x=cx+dx,y=cy+dy; if(x<0||x>=size||y<0||y>=size)continue; const dist=Math.max(Math.abs(dx-3),Math.abs(dy-3)); setModule(x,y,dist!==2&&dist!==4); } }
+                placeFinder(0,0); placeFinder(size-7,0); placeFinder(0,size-7);
+                for(let i=8;i<size-8;i++){ const d=i%2===0; if(matrix[6][i]===null)setModule(i,6,d); if(matrix[i][6]===null)setModule(6,i,d); }
+                const align = ALIGNMENT_PATTERN_TABLE[version];
+                for(const ay of align)for(const ax of align){
+                    if((ax===6&&ay===6)||(ax===6&&ay===size-7)||(ax===size-7&&ay===6))continue;
+                    for(let dy=-2;dy<=2;dy++)for(let dx=-2;dx<=2;dx++){ const d=Math.max(Math.abs(dx),Math.abs(dy)); setModule(ax+dx,ay+dy,d!==1); }
+                }
+                setModule(8,size-8,true);
+                for(let i=0;i<9;i++){ if(matrix[8][i]===null)matrix[8][i]=false; if(matrix[i][8]===null)matrix[i][8]=false; }
+                for(let i=0;i<8;i++){ if(matrix[8][size-1-i]===null)matrix[8][size-1-i]=false; if(matrix[size-1-i][8]===null)matrix[size-1-i][8]=false; }
+                if(matrix[size-8][8]===null)matrix[size-8][8]=false;
+                if(version>=7){ let rem=version; for(let i=0;i<12;i++)rem=(rem<<1)^((rem>>>11)*0x1F25); const bits=(version<<12)|rem; for(let i=0;i<18;i++){ const bit=((bits>>>i)&1)===1; const a=size-11+(i%3); const b=Math.floor(i/3); setModule(a,b,bit); setModule(b,a,bit); } }
+                const dataBits=[];
+                for(const b of bytes)for(let i=7;i>=0;i--)dataBits.push(((b>>>i)&1)===1);
+                for(let i=0;i<4&&dataBits.length<getNumRawDataModules(version);i++)dataBits.push(false);
+                while(dataBits.length%8!==0)dataBits.push(false);
+                const totalDataBits=getNumDataCodewords(version)*8;
+                let padIdx=0;
+                while(dataBits.length<totalDataBits){ const p=padIdx%2===0?PAD0:PAD1; for(let i=7;i>=0;i--)dataBits.push(((p>>>i)&1)===1); padIdx++; }
+                const dataCodewords=[];
+                for(let i=0;i<dataBits.length;i+=8){ let b=0; for(let j=0;j<8;j++)if(dataBits[i+j])b|=(1<<(7-j)); dataCodewords.push(b); }
+                const eccLen=getEccCodewords(version);
+                const divisor=rsComputeDivisor(eccLen);
+                const ecc=rsComputeRemainder(dataCodewords,divisor);
+                const finalBytes=dataCodewords.concat(ecc);
+                const bitStream=[];
+                for(const b of finalBytes)for(let i=7;i>=0;i--)bitStream.push(((b>>>i)&1)===1);
+                let bitIdx=0, upward=true;
+                for(let right=size-1;right>=1;right-=2){
+                    if(right===6)right=5;
+                    for(let vert=0;vert<size;vert++){
+                        const y=upward?size-1-vert:vert;
+                        for(let k=0;k<2;k++){
+                            const x=right-k;
+                            if(matrix[y][x]!==null)continue;
+                            let bit=false;
+                            if(bitIdx<bitStream.length)bit=bitStream[bitIdx++];
+                            const mask=((y+x)%2===0);
+                            setModule(x,y,bit!==mask);
+                        }
+                    }
+                    upward=!upward;
+                }
+                const formatData=(ECC_L<<3)|0;
+                let rem=formatData;
+                for(let i=0;i<10;i++)rem=(rem<<1)^((rem>>>9)*0x537);
+                const formatBits=((formatData<<10)|rem)^0x5412;
+                const putFormat=(x,y,bit)=>{setModule(x,y,bit);};
+                for(let i=0;i<=5;i++)putFormat(8,i,((formatBits>>i)&1)===1);
+                putFormat(8,7,((formatBits>>6)&1)===1);
+                putFormat(8,8,((formatBits>>7)&1)===1);
+                putFormat(7,8,((formatBits>>8)&1)===1);
+                for(let i=9;i<15;i++)putFormat(14-i,8,((formatBits>>i)&1)===1);
+                for(let i=0;i<8;i++)putFormat(size-1-i,8,((formatBits>>i)&1)===1);
+                for(let i=8;i<15;i++)putFormat(8,size-15+i,((formatBits>>i)&1)===1);
+                putFormat(8,size-8,true);
+                return matrix;
+            }
+            function pickVersion(byteLen){
+                for(let v=1;v<=10;v++){
+                    const cap=getDataCapacity(v);
+                    const lenBits=v<10?8:16;
+                    const need=Math.ceil((4+lenBits+byteLen*8)/8);
+                    if(need<=cap)return v;
+                }
+                return 10;
+            }
+            function generate(text){
+                const bytes=toUtf8Bytes(text);
+                const version=pickVersion(bytes.length);
+                const lenBits=version<10?8:16;
+                const bits=[];
+                const pushBits=(value,count)=>{ for(let i=count-1;i>=0;i--)bits.push(((value>>>i)&1)===1); };
+                pushBits(4,4); pushBits(bytes.length,lenBits);
+                for(const b of bytes)pushBits(b,8);
+                while(bits.length%8!==0)bits.push(false);
+                const dataBytes=[];
+                for(let i=0;i<bits.length;i+=8){ let b=0; for(let j=0;j<8;j++)if(bits[i+j])b|=(1<<(7-j)); dataBytes.push(b); }
+                return buildMatrix(version,dataBytes);
+            }
+            return { generate };
+        })();
+
+        function drawQr(text){
+            const size=300, dpr=window.devicePixelRatio||1;
+            qrCanvas.width=size*dpr; qrCanvas.height=size*dpr;
+            qrCanvas.style.width=size+'px'; qrCanvas.style.height=size+'px';
+            const ctx=qrCanvas.getContext('2d');
+            ctx.fillStyle='#fff'; ctx.fillRect(0,0,qrCanvas.width,qrCanvas.height);
+            let matrix;
+            try { matrix=QR.generate(text); } catch(e){ console.error(e); return; }
+            const n=matrix.length, margin=4;
+            const cell=Math.floor(qrCanvas.width/(n+margin*2));
+            const offset=Math.floor((qrCanvas.width-cell*n)/2);
+            ctx.fillStyle='#142433';
+            for(let y=0;y<n;y++)for(let x=0;x<n;x++)if(matrix[y][x])ctx.fillRect(offset+x*cell,offset+y*cell,cell,cell);
+        }
+        function downloadQr(){
+            qrCanvas.toBlob(blob=>{
+                if(!blob)return;
+                const url=URL.createObjectURL(blob);
+                const a=document.createElement('a');
+                a.href=url; a.download='zapletaya-yazyki-qr.png';
+                document.body.appendChild(a); a.click(); document.body.removeChild(a);
+                setTimeout(()=>URL.revokeObjectURL(url),3000);
+                showToast('QR сохранён');
+            },'image/png');
+        }
+
+        function init(){
+            setActiveLevelButton(currentLevel);
+            updateLevelLabel();
+            updateCounterUI();
+            currentPhrase=getRandomPhrase(currentLevel,'');
+            updateDisplay(currentPhrase);
+
+            nextBtn.addEventListener('click',showNextPhrase);
+            resetCounterBtn.addEventListener('click',resetCounter);
+            levelBtns.forEach(btn=>btn.addEventListener('click',e=>changeLevel(e.currentTarget.dataset.level)));
+
+            openEditorBtn.addEventListener('click',openEditor);
+            closeEditorBtn.addEventListener('click',closeEditor);
+            editorOverlay.addEventListener('click',e=>{ if(e.target===editorOverlay)closeEditor(); });
+
+            tabBtns.forEach(btn=>btn.addEventListener('click',()=>{
+                const tab=btn.dataset.tab;
+                tabBtns.forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));
+                tabContents.forEach(c=>c.classList.toggle('active',c.id==='tab-'+tab));
+            }));
+            saveButtons.forEach(btn=>btn.addEventListener('click',()=>{
+                const level=btn.dataset.save;
+                const input=document.getElementById('input-'+level);
+                if(addPhrase(level,input.value))input.value='';
+            }));
+            resetAllBtn.addEventListener('click',resetAllPhrases);
+            downloadHtmlBtn.addEventListener('click',downloadHtmlFile);
+
+            shareBtn.addEventListener('click',doShare);
+            qrBtn.addEventListener('click',openQr);
+            closeQrBtn.addEventListener('click',closeQr);
+            qrOverlay.addEventListener('click',e=>{ if(e.target===qrOverlay)closeQr(); });
+            qrDownloadBtn.addEventListener('click',downloadQr);
+            qrCopyBtn.addEventListener('click',()=>copyToClipboard(qrUrlInput.value));
+
+            document.addEventListener('keydown',e=>{
+                if(e.key==='Escape'){
+                    if(editorOverlay.classList.contains('open'))closeEditor();
+                    if(qrOverlay.classList.contains('open'))closeQr();
+                }
+            });
+        }
+        document.addEventListener('DOMContentLoaded',init);
+    })();
+    </script>
+</body>
+</html>
