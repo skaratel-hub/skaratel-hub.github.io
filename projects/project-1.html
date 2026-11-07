@@ -1,1 +1,623 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Fallout Rusty Terminal</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
 
+  :root {
+    --scale: 1;
+    --base-height: 110px; 
+    --tube-ratio: 0.65;   
+  }
+
+  body {
+    background: 
+      radial-gradient(circle at 50% 30%, rgba(60, 20, 5, 0.4) 0%, transparent 60%),
+      repeating-linear-gradient(45deg, rgba(0,0,0,0.1) 0px, rgba(0,0,0,0.1) 2px, transparent 2px, transparent 4px),
+      #0a0805;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Courier New', monospace;
+    overflow: hidden;
+  }
+
+  /* --- ВЕРХНИЙ ЗАГОЛОВОК --- */
+  .header-container {
+    position: absolute;
+    top: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    z-index: 10;
+  }
+
+  .scratch-text {
+    color: transparent;
+    font-size: 18px;
+    letter-spacing: 8px;
+    font-weight: bold;
+    font-family: 'Courier New', monospace;
+    text-shadow: 
+      -1px -1px 0px rgba(255, 100, 0, 0.3),
+      1px 1px 0px rgba(0, 0, 0, 0.9),
+      2px 2px 3px rgba(0,0,0,0.6);
+    opacity: 0.8;
+  }
+
+  .title-frame {
+    padding: 6px 30px;
+    background: linear-gradient(180deg, #2a1a10 0%, #110804 100%);
+    border: 3px solid #4a2e1b;
+    border-radius: 6px;
+    box-shadow: 
+      inset 0 0 10px rgba(0,0,0,0.9),
+      0 5px 10px rgba(0,0,0,0.8);
+  }
+
+  .title {
+    color: #ff7a00;
+    font-size: 20px;
+    letter-spacing: 6px;
+    text-shadow: 0 0 10px #ff4400, 2px 2px 2px #000;
+    opacity: 0.9;
+  }
+
+  /* --- КОРПУС --- */
+  .clock-body {
+    background: 
+      repeating-linear-gradient(115deg, transparent 0px, transparent 150px, rgba(0,0,0,0.4) 150px, rgba(0,0,0,0.4) 151px),
+      repeating-linear-gradient(75deg, transparent 0px, transparent 200px, rgba(0,0,0,0.3) 200px, rgba(0,0,0,0.3) 201px),
+      radial-gradient(circle at 20% 80%, rgba(120,40,10,0.4) 0%, transparent 40%),
+      radial-gradient(circle at 80% 20%, rgba(100,30,5,0.3) 0%, transparent 30%),
+      linear-gradient(180deg, rgba(70,45,20,0.6) 0%, rgba(15,8,4,0.95) 100%),
+      #151008;
+    border: 4px solid #2a1a0a;
+    border-radius: 12px;
+    padding: 35px 45px 25px 45px;
+    box-shadow: 
+      0 0 60px rgba(255, 60, 0, 0.15),
+      inset 0 0 40px rgba(0,0,0,0.95),
+      0 10px 50px rgba(0,0,0,0.9);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    position: relative;
+    margin-top: 80px; 
+    overflow: hidden;
+  }
+
+  /* --- СЛЕДЫ ДИНОЗАВРА (В ПРАВОМ НИЖНЕМ УГЛУ) --- */
+  .claw-marks {
+    position: absolute;
+    bottom: 10%;
+    right: 5%;
+    width: 120px;
+    height: 150px;
+    pointer-events: none;
+    z-index: 1;
+    transform: rotate(-35deg); /* Наклон для динамики */
+    opacity: 0.7;
+  }
+  
+  .claw-mark {
+    position: absolute;
+    width: 6px;
+    height: 100%;
+    background: linear-gradient(180deg, transparent 0%, #050200 20%, #000 80%, transparent 100%);
+    box-shadow: 
+      inset 2px 0 2px rgba(255, 100, 0, 0.2), /* Блик ржавчины */
+      inset -2px 0 2px rgba(0,0,0,0.8);
+    border-radius: 50% 10% 20% 50%; /* Рваная форма */
+  }
+  
+  .claw-mark:nth-child(1) { left: 0px; height: 85%; top: 15%; transform: rotate(-5deg); }
+  .claw-mark:nth-child(2) { left: 30px; height: 100%; top: 0%; transform: rotate(0deg); }
+  .claw-mark:nth-child(3) { left: 60px; height: 90%; top: 5%; transform: rotate(5deg); }
+
+  /* --- ПЯТНА КРОВИ (В ЛЕВОМ НИЖНЕМ УГЛУ) --- */
+  .blood-stains {
+    position: absolute;
+    bottom: -20px;
+    left: -20px;
+    width: 250px;
+    height: 250px;
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0.6;
+    /* Наложение нескольких радиальных градиентов создает эффект хаотичных пятен */
+    background: 
+      radial-gradient(circle at 30% 70%, #3a0505 0%, transparent 40%),
+      radial-gradient(circle at 60% 90%, #4a0606 0%, transparent 50%),
+      radial-gradient(circle at 80% 60%, #2a0303 0%, transparent 30%),
+      radial-gradient(circle at 50% 50%, #5a0a0a 0%, transparent 20%);
+    filter: blur(2px); /* Легкое размытие, чтобы казалось въевшимся */
+  }
+  
+  /* Мелкие брызги крови */
+  .blood-stains::before {
+    content: '';
+    position: absolute;
+    top: 20%; left: 40%;
+    width: 100%; height: 100%;
+    background: 
+      radial-gradient(circle at 10% 20%, #4a0606 2px, transparent 3px),
+      radial-gradient(circle at 30% 40%, #3a0505 3px, transparent 4px),
+      radial-gradient(circle at 70% 10%, #5a0a0a 1px, transparent 2px),
+      radial-gradient(circle at 80% 30%, #2a0303 4px, transparent 5px),
+      radial-gradient(circle at 50% 70%, #4a0606 2px, transparent 3px);
+    opacity: 0.8;
+  }
+
+  /* --- БОЛТЫ --- */
+  .screw {
+    position: absolute;
+    width: 24px; 
+    height: 24px;
+    background: radial-gradient(circle at 30% 30%, #5c3a21, #1f0f05);
+    border-radius: 50%;
+    box-shadow: 
+      inset 0 -2px 5px rgba(0,0,0,0.9),
+      0 4px 6px rgba(0,0,0,0.9);
+    border: 1px solid #110500;
+    z-index: 5;
+  }
+
+  .screw.tl::before, .screw.tr::before {
+    content: '';
+    position: absolute;
+    top: 50%; left: 15%;
+    width: 70%; height: 2px;
+    background: #0a0300;
+    transform: translateY(-50%) rotate(25deg);
+    box-shadow: inset 0 1px 3px #000;
+  }
+  .screw.tl::after, .screw.tr::after {
+    content: '';
+    position: absolute;
+    top: 15%; left: 50%;
+    width: 2px; height: 70%;
+    background: #0a0300;
+    transform: translateX(-50%) rotate(25deg);
+    box-shadow: inset 0 1px 3px #000;
+  }
+
+  .screw.bl::before, .screw.br::before {
+    content: '';
+    position: absolute;
+    top: 50%; left: 15%;
+    width: 70%; height: 3px;
+    background: #0a0300;
+    transform: translateY(-50%) rotate(15deg);
+    box-shadow: inset 0 1px 3px #000;
+  }
+
+  .screw.tl { top: 12px; left: 12px; }
+  .screw.tr { top: 12px; right: 12px; transform: rotate(15deg); }
+  .screw.bl { bottom: 12px; left: 12px; transform: rotate(-10deg); }
+  
+  .screw.br { 
+    bottom: 12px; right: 12px; 
+    background: #000;
+    border: 2px solid #2a1a0a;
+    box-shadow: inset 0 5px 10px #000;
+  }
+  .screw.br::before, .screw.br::after { display: none; }
+
+  /* --- ТАБЛИЧКИ --- */
+  .metal-plate {
+    color: #d4a373;
+    font-weight: bold;
+    font-family: 'Courier New', monospace;
+    background: 
+      radial-gradient(circle at 20% 20%, rgba(100,30,0,0.4) 0%, transparent 40%),
+      radial-gradient(circle at 80% 80%, rgba(50,20,0,0.6) 0%, transparent 50%),
+      linear-gradient(180deg, #3a2515 0%, #150a03 100%);
+    padding: 5px 18px;
+    border-radius: 2px;
+    border: 1px solid #110500;
+    box-shadow: 
+      inset 0 1px 2px rgba(255,255,255,0.1),
+      inset 0 -2px 5px rgba(0,0,0,0.9),
+      0 2px 5px rgba(0,0,0,0.8);
+    text-shadow: 1px 1px 0px #000, 0 0 3px rgba(255,100,0,0.3);
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 6;
+  }
+
+  .metal-plate::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: radial-gradient(circle at 85% 25%, rgba(150,50,0,0.6) 0%, transparent 50%),
+                radial-gradient(circle at 15% 75%, rgba(100,30,0,0.5) 0%, transparent 40%);
+    pointer-events: none;
+    border-radius: 2px;
+    z-index: 1;
+  }
+
+  .rivet {
+    position: absolute;
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, #a87a5a, #2a1505);
+    box-shadow: 
+      inset -1px -1px 2px rgba(0,0,0,0.8),
+      0 1px 1px rgba(0,0,0,0.8);
+    z-index: 2;
+  }
+  
+  .rivet.tl { top: 3px; left: 3px; }
+  .rivet.tr { top: 3px; right: 3px; }
+  .rivet.bl { bottom: 3px; left: 3px; }
+  .rivet.br { bottom: 3px; right: 3px; }
+
+  .metal-plate.hrs .rivet.tl {
+    background: #000;
+    box-shadow: inset 0 1px 2px #000;
+  }
+
+  /* --- ЧАСЫ --- */
+  .clock-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 5px;
+    flex-wrap: nowrap;
+    z-index: 5;
+  }
+
+  .time-group {
+    display: flex;
+    align-items: flex-start;
+    gap: 2px;
+  }
+
+  .digit-block, .separator {
+    position: relative; 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: calc(var(--base-height) * var(--tube-ratio) * var(--scale));
+    height: calc(var(--base-height) * var(--scale));
+    transition: width 0.1s ease-out, height 0.1s ease-out;
+    margin-bottom: 12px; 
+  }
+
+  .digit, .colon-img {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover; 
+    object-position: bottom center; 
+    display: block;
+    border-radius: 3px;
+    box-shadow: 0 0 15px rgba(255, 60, 0, 0.3);
+    animation: flicker 6s infinite;
+  }
+
+  .colon-img {
+    animation: flicker 4s infinite;
+  }
+
+  .label {
+    position: absolute;
+    bottom: calc(-12px * var(--scale));
+    font-size: calc(12px * var(--scale));
+    letter-spacing: 2px;
+    transition: font-size 0.1s ease-out, bottom 0.1s ease-out;
+    white-space: nowrap;
+  }
+
+  /* --- ДАТА --- */
+  .date-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+    border-top: 1px solid #3a2510;
+    padding-top: 15px;
+    margin-top: 5px;
+    z-index: 5;
+  }
+
+  .date-digit, .date-dot {
+    height: calc(45px * var(--scale)); 
+    width: auto;
+    transition: height 0.1s ease-out;
+  }
+  .date-digit {
+    border-radius: 2px;
+    box-shadow: 0 0 10px rgba(255, 60, 0, 0.2);
+  }
+  .date-dot {
+    filter: brightness(1.2);
+    margin: 0 2px;
+  }
+
+  /* --- ПАНЕЛЬ УПРАВЛЕНИЯ --- */
+  .control-panel {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 25px;
+    position: relative;
+    z-index: 5;
+    height: 50px;
+  }
+
+  .control-panel span.metal-plate {
+    font-size: 12px;
+    letter-spacing: 1px;
+    height: fit-content;
+  }
+
+  .rheostat-track {
+    position: relative;
+    width: 220px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+  }
+
+  /* ВИТАЯ ПРУЖИНА */
+  .spring {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 10px;
+    background: 
+      repeating-linear-gradient(
+        115deg,
+        #1a1005 0px, #1a1005 2px,
+        #5c3a21 2px, #5c3a21 6px,
+        #110500 6px, #110500 8px
+      );
+    border-radius: 5px;
+    box-shadow: 
+      inset 0 3px 5px rgba(0,0,0,0.9),
+      inset 0 -2px 3px rgba(0,0,0,0.8),
+      0 1px 2px rgba(255,100,0,0.2);
+    z-index: 0;
+  }
+
+  input[type=range] {
+    -webkit-appearance: none;
+    width: 100%;
+    background: transparent;
+    position: relative;
+    z-index: 2;
+  }
+  input[type=range]:focus { outline: none; }
+
+  input[type=range]::-webkit-slider-runnable-track {
+    width: 100%;
+    height: 10px;
+    cursor: pointer;
+    background: transparent;
+  }
+
+  /* Круглая ручка */
+  input[type=range]::-webkit-slider-thumb {
+    height: 34px;
+    width: 34px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, #8a6038, #2a1505);
+    cursor: pointer;
+    -webkit-appearance: none;
+    margin-top: -12px;
+    border: 2px solid #110500;
+    box-shadow: 
+      0 4px 8px rgba(0,0,0,0.9),
+      inset 0 -2px 5px rgba(0,0,0,0.8),
+      inset 0 2px 5px rgba(255,255,255,0.2);
+    clip-path: polygon(
+      50% 0%, 65% 5%, 80% 15%, 90% 30%, 95% 50%, 
+      90% 70%, 80% 85%, 65% 95%, 50% 100%, 35% 95%, 
+      20% 85%, 10% 70%, 5% 50%, 10% 30%, 20% 15%, 35% 5%
+    );
+    position: relative;
+    z-index: 3;
+  }
+
+  @keyframes flicker {
+    0%, 100% { opacity: 1; }
+    48% { opacity: 1; }
+    49% { opacity: 0.85; }
+    50% { opacity: 1; }
+    72% { opacity: 0.95; }
+    73% { opacity: 1; }
+  }
+</style>
+</head>
+<body>
+
+  <div class="header-container">
+    <div class="scratch-text">POST-APOCALYPTIC</div>
+    <div class="title-frame">
+      <div class="title">CLOCK</div>
+    </div>
+  </div>
+
+  <div class="clock-body">
+    <!-- Пятна крови в левом нижнем углу -->
+    <div class="blood-stains"></div>
+
+    <!-- Когти в правом нижнем углу -->
+    <div class="claw-marks">
+      <div class="claw-mark"></div>
+      <div class="claw-mark"></div>
+      <div class="claw-mark"></div>
+    </div>
+
+    <div class="screw tl"></div>
+    <div class="screw tr"></div>
+    <div class="screw bl"></div>
+    <div class="screw br"></div>
+
+    <div class="clock-row">
+      <div class="time-group">
+        <div class="digit-block">
+          <img class="digit" id="h1" src="images/ГЛЛ-0.jpg" alt="0">
+        </div>
+        <div class="digit-block">
+          <img class="digit" id="h2" src="images/ГЛЛ-0.jpg" alt="0">
+          <span class="label metal-plate hrs">
+            HRS
+            <span class="rivet tl"></span><span class="rivet tr"></span>
+            <span class="rivet bl"></span><span class="rivet br"></span>
+          </span>
+        </div>
+      </div>
+
+      <div class="separator">
+        <img class="colon-img" src="images/ГЛЛ-dot2.jpg" alt=":" id="colon1">
+      </div>
+
+      <div class="time-group">
+        <div class="digit-block">
+          <img class="digit" id="m1" src="images/ГЛЛ-0.jpg" alt="0">
+        </div>
+        <div class="digit-block">
+          <img class="digit" id="m2" src="images/ГЛЛ-0.jpg" alt="0">
+          <span class="label metal-plate">
+            MIN
+            <span class="rivet tl"></span><span class="rivet tr"></span>
+            <span class="rivet bl"></span><span class="rivet br"></span>
+          </span>
+        </div>
+      </div>
+
+      <div class="separator">
+        <img class="colon-img" src="images/ГЛЛ-dot2.jpg" alt=":" id="colon2">
+      </div>
+
+      <div class="time-group">
+        <div class="digit-block">
+          <img class="digit" id="s1" src="images/ГЛЛ-0.jpg" alt="0">
+        </div>
+        <div class="digit-block">
+          <img class="digit" id="s2" src="images/ГЛЛ-0.jpg" alt="0">
+          <span class="label metal-plate">
+            SEC
+            <span class="rivet tl"></span><span class="rivet tr"></span>
+            <span class="rivet bl"></span><span class="rivet br"></span>
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div class="date-row" id="date-container"></div>
+
+    <!-- Панель управления -->
+    <div class="control-panel">
+      <span class="metal-plate">
+        SCALE
+        <span class="rivet tl"></span><span class="rivet tr"></span>
+        <span class="rivet bl"></span><span class="rivet br"></span>
+      </span>
+      
+      <div class="rheostat-track">
+        <div class="spring"></div>
+        <input type="range" id="scale-slider" min="0.6" max="1.6" step="0.05" value="1">
+      </div>
+
+      <span class="metal-plate">
+        ZOOM
+        <span class="rivet tl"></span><span class="rivet tr"></span>
+        <span class="rivet bl"></span><span class="rivet br"></span>
+      </span>
+    </div>
+
+  </div>
+
+<script>
+  const digits = ['0','1','2','3','4','5','6','7','8','9'];
+  digits.forEach(d => {
+    const img = new Image();
+    img.src = `images/ГЛЛ-${d}.jpg`;
+  });
+  
+  const dotImgSrc = 'images/ГЛЛ-dot.jpg';   
+  const colonImgSrc = 'images/ГЛЛ-dot2.jpg';
+
+  function setDigit(id, val) {
+    const img = document.getElementById(id);
+    const newSrc = `images/ГЛЛ-${val}.jpg`;
+    if (img.getAttribute('src') !== newSrc) {
+      img.setAttribute('src', newSrc);
+      img.setAttribute('alt', val);
+    }
+  }
+
+  function updateDate(date) {
+    const d = String(date.getDate()).padStart(2, '0');
+    const m = String(date.getMonth() + 1).padStart(2, '0');
+    const y = String(date.getFullYear());
+    const container = document.getElementById('date-container');
+    
+    let html = '';
+    html += `<img class="date-digit" src="images/ГЛЛ-${d[0]}.jpg">`;
+    html += `<img class="date-digit" src="images/ГЛЛ-${d[1]}.jpg">`;
+    html += `<img class="date-dot" src="${dotImgSrc}">`;
+    
+    html += `<img class="date-digit" src="images/ГЛЛ-${m[0]}.jpg">`;
+    html += `<img class="date-digit" src="images/ГЛЛ-${m[1]}.jpg">`;
+    html += `<img class="date-dot" src="${dotImgSrc}">`;
+    
+    html += `<img class="date-digit" src="images/ГЛЛ-${y[0]}.jpg">`;
+    html += `<img class="date-digit" src="images/ГЛЛ-${y[1]}.jpg">`;
+    html += `<img class="date-digit" src="images/ГЛЛ-${y[2]}.jpg">`;
+    html += `<img class="date-digit" src="images/ГЛЛ-${y[3]}.jpg">`;
+
+    if (container.innerHTML !== html) {
+      container.innerHTML = html;
+    }
+  }
+
+  function updateClock() {
+    const now = new Date();
+    const h = String(now.getHours()).padStart(2, '0');
+    const m = String(now.getMinutes()).padStart(2, '0');
+    const s = String(now.getSeconds()).padStart(2, '0');
+
+    setDigit('h1', h[0]);
+    setDigit('h2', h[1]);
+    setDigit('m1', m[0]);
+    setDigit('m2', m[1]);
+    setDigit('s1', s[0]);
+    setDigit('s2', s[1]);
+
+    const colons = [document.getElementById('colon1'), document.getElementById('colon2')];
+    if (now.getSeconds() % 2 === 0) {
+      colons.forEach(c => c.style.opacity = '1');
+    } else {
+      colons.forEach(c => c.style.opacity = '0.2');
+    }
+
+    updateDate(now);
+  }
+
+  const slider = document.getElementById('scale-slider');
+  
+  slider.addEventListener('input', (e) => {
+    document.documentElement.style.setProperty('--scale', e.target.value);
+  });
+
+  updateClock();
+  setInterval(updateClock, 1000);
+</script>
+
+</body>
+</html>
