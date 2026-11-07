@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="manifest" href="/manifest.json">
     <title>Портфолио КАВ — Проекты</title>
     <style>
         body {
@@ -13,14 +14,9 @@
             margin: 0 auto;
             padding: 40px 20px;
         }
-        h1 {
-            text-align: center;
-            color: #2c3e50;
-        }
-        .project-list {
-            list-style: none;
-            padding: 0;
-        }
+        h1 { text-align: center; color: #2c3e50; }
+        .subtitle { text-align: center; color: #7f8c8d; }
+        .project-list { list-style: none; padding: 0; }
         .project-item {
             background: white;
             margin-bottom: 12px;
@@ -30,6 +26,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            gap: 10px;
         }
         .project-link {
             text-decoration: none;
@@ -37,18 +34,10 @@
             font-size: 1.1em;
             font-weight: 600;
         }
-        .project-link:hover {
-            text-decoration: underline;
-        }
+        .project-link:hover { text-decoration: underline; }
         .project-link.disabled {
             color: #95a5a6;
             cursor: default;
-            text-decoration: none;
-        }
-        .description {
-            color: #7f8c8d;
-            margin-top: 6px;
-            font-size: 0.9em;
         }
         .status-badge {
             font-size: 0.85em;
@@ -56,513 +45,88 @@
             border-radius: 4px;
             background-color: #eee;
             color: #7f8c8d;
+            white-space: nowrap;
+        }
+        .status-badge.ready {
+            background-color: #e8f8f0;
+            color: #27ae60;
+        }
+        .error-note {
+            text-align: center;
+            color: #c0392b;
+            padding: 20px;
         }
     </style>
 </head>
 <body>
     <h1>Проекты КАВ</h1>
-    <p style="text-align:center; color:#7f8c8d;">Список из 100 проектов. Если пункт серый — файл ещё не загружен.</p>
-    <ul class="project-list">
-        <!-- ПРОЕКТ 1 -->
-        <li class="project-item">
-            <a href="projects/project-1.html" class="project-link">Проект №1: Скороговорки</a>
-            <span class="status-badge">готов</span>
-        </li>
-        <!-- ПРОЕКТ 2 -->
-        <li class="project-item">
-            <a href="projects/project-2.html" class="project-link project-link.disabled">Проект №2: Заготовка</a>
-            <span class="status-badge">файл не найден</span>
-        </li>
-        <!-- ПРОЕКТ 3 -->
-        <li class="project-item">
-            <a href="projects/project-3.html" class="project-link project-link.disabled">Проект №3: Заготовка</a>
-            <span class="status-badge">файл не найден</span>
-        </li>
-        <!-- ПРОЕКТ 4 -->
-        <li class="project-item">
-            <a href="projects/project-4.html" class="project-link project-link.disabled">Проект №4: Заготовка</a>
-            <span class="status-badge">файл не найден</span>
-        </li>
-        <!-- ПРОЕКТ 5 -->
-        <li class="project-item">
-            <a href="projects/project-5.html" class="project-link project-link.disabled">Проект №5: Заготовка</a>
-            <span class="status-badge">файл не найден</span>
-        </li>
-        <!-- ПРОЕКТ 6 -->
-        <li class="project-item">
-            <a href="projects/project-6.html" class="project-link project-link.disabled">Проект №6: Заготовка</a>
-            <span class="status-badge">файл не найден</span>
-        </li>
-        <!-- ПРОЕКТ 7 -->
-        <li class="project-item">
-            <a href="projects/project-7.html" class="project-link project-link.disabled">Проект №7: Заготовка</a>
-            <span class="status-badge">файл не найден</span>
-        </li>
-        <!-- ПРОЕКТ 8 -->
-        <li class="project-item">
-            <a href="projects/project-8.html" class="project-link project-link.disabled">Проект №8: Заготовка</a>
-            <span class="status-badge">файл не найден</span>
-        </li>
-        <!-- ПРОЕКТ 9 -->
-        <li class="project-item">
-            <a href="projects/project-9.html" class="project-link project-link.disabled">Проект №9: Заготовка</a>
-            <span class="status-badge">файл не найден</span>
-        </li>
-        <!-- ПРОЕКТ 10 -->
-        <li class="project-item">
-            <a href="projects/project-10.html" class="project-link project-link.disabled">Проект №10: Заготовка</a>
-            <span class="status-badge">файл не найден</span>
-        </li>
-        <!-- ПРОЕКТ 11 -->
-        <li class="project-item">
-            <a href="projects/project-11.html" class="project-link project-link.disabled">Проект №11: Заготовка</a>
-            <span class="status-badge">файл не найден</span>
-        </li>
-        <!-- ПРОЕКТ 12 -->
-        <li class="project-item">
-            <a href="projects/project-12.html" class="project-link project-link.disabled">Проект №12: Заготовка</a>
-            <span class="status-badge">файл не найден</span>
-        </li>
-        <!-- ПРОЕКТ 13 -->
-        <li class="project-item">
-            <a href="projects/project-13.html" class="project-link project-link.disabled">Проект №13: Заготовка</a>
-            <span class="status-badge">файл не найден</span>
-        </li>
-        <!-- ПРОЕКТ 14 -->
-        <li class="project-item">
-            <a href="projects/project-14.html" class="project-link project-link.disabled">Проект №14: Заготовка</a>
-            <span class="status-badge">файл не найден</span>
-        </li>
-        <!-- ПРОЕКТ 15 -->
-        <li class="project-item">
-            <a href="projects/project-15.html" class="project-link project-link.disabled">Проект №15: Заготовка</a>
-            <span class="status-badge">файл не найден</span>
-        </li>
-        <!-- ПРОЕКТ 16 -->
-        <li class="project-item">
-            <a href="projects/project-16.html" class="project-link project-link.disabled">Проект №16: Заготовка</a>
-            <span class="status-badge">файл не найден</span>
-        </li>
-        <!-- ПРОЕКТ 17 -->
-        <li class="project-item">
-            <a href="projects/project-17.html" class="project-link project-link.disabled">Проект №17: Заготовка</a>
-            <span class="status-badge">файл не найден</span>
-        </li>
-        <!-- ПРОЕКТ 18 -->
-        <li class="project-item">
-            <a href="projects/project-18.html" class="project-link project-link.disabled">Проект №18: Заготовка</a>
-            <span class="status-badge">файл не найден</span>
-        </li>
-        <!-- ПРОЕКТ 19 -->
-        <li class="project-item">
-            <a href="projects/project-19.html" class="project-link project-link.disabled">Проект №19: Заготовка</a>
-            <span class="status-badge">файл не найден</span>
-        </li>
-        <!-- ПРОЕКТ 20 -->
-        <li class="project-item">
-            <a href="projects/project-20.html" class="project-link project-link.disabled">Проект №20: Заготовка</a>
-            <span class="status-badge">файл не найден</span>
-        </li>
-        <!-- ПРОЕКТ 21 -->
-        <li class="project-item">
-            <a href="projects/project-21.html" class="project-link project-link.disabled">Проект №21: Заготовка</a>
-            <span class="status-badge">файл не найден</span>
-        </li>
-        <!-- ПРОЕКТ 22 -->
-        <li class="project-item">
-            <a href="projects/project-22.html" class="project-link project-link.disabled">Проект №22: Заготовка</a>
-            <span class="status-badge">файл не найден</span>
-        </li>
-        <!-- ПРОЕКТ 23 -->
-        <li class="project-item">
-            <a href="projects/project-23.html" class="project-link project-link.disabled">Проект №23: Заготовка</a>
-            <span class="status-badge">файл не найден</span>
-        </li>
-        <!-- ПРОЕКТ 24 -->
-        <li class="project-item">
-            <a href="projects/project-24.html" class="project-link project-link.disabled">Проект №24: Заготовка</a>
-            <span class="status-badge">файл не найден</span>
-        </li>
-        <!-- ПРОЕКТ 25 -->
-        <li class="project-item">
-            <a href="projects/project-25.html" class="project-link project-link.disabled">Проект №25: Заготовка</a>
-            <span class="status-badge">файл не найден</span>
-        </li>
-        <!-- ПРОЕКТ 26 -->
-        <li class="project-item">
-            <a href="projects/project-26.html" class="project-link project-link.disabled">Проект №26: Заготовка</a>
-            <span class="status-badge">файл не найден</span>
-        </li>
-        <!-- ПРОЕКТ 27 -->
-        <li class="project-item">
-            <a href="projects/project-27.html" class="project-link project-link.disabled">Проект №27: Заготовка</a>
-            <span class="status-badge">файл не найден</span>
-        </li>
-        <!-- ПРОЕКТ 28 -->
-        <li class="project-item">
-            <a href="projects/project-28.html" class="project-link project-link.disabled">Проект №28: Заготовка</a>
-            <span class="status-badge">файл не найден</span>
-        </li>
-        <!-- ПРОЕКТ 29 -->
-        <li class="project-item">
-            <a href="projects/project-29.html" class="project-link project-link.disabled">Проект №29: Заготовка</a>
-            <span class="status-badge">файл не найден</span>
-        </li>
-        <!-- ПРОЕКТ 30 -->
-        <li class="project-item">
-            <a href="projects/project-30.html" class="project-link project-link.disabled">Проект №30: Заготовка</a>
-            <span class="status-badge">файл не найден</span>
-        </li>
-        <!-- ПРОЕКТ 31 -->
-        <li class="project-item">
-            <a href="projects/project-31.html" class="project-link project-link.disabled">Проект №31: Заготовка</a>
-            <span class="status-badge">файл не найден</span>
-        </li>
-        <!-- ПРОЕКТ 32 -->
-        <li class="project-item">
-            <a href="projects/project-32.html" class="project-link project-link.disabled">Проект №32: Заготовка</a>
-            <span class="status-badge">файл не найден</span>
-        </li>
-        <!-- ПРОЕКТ 33 -->
-        <li class="project-item">
-            <a href="projects/project-33.html" class="project-link project-link.disabled">Проект №33: Заготовка</a>
-            <span class="status-badge">файл не найден</span>
-        </li>
-        <!-- ПРОЕКТ 34 -->
-        <li class="project-item">
-            <a href="projects/project-34.html" class="project-link project-link.disabled">Проект №34: Заготовка</a>
-            <span class="status-badge">файл не найден</span>
-        </li>
-        <!-- ПРОЕКТ 35 -->
-        <li class="project-item">
-            <a href="projects/project-35.html" class="project-link project-link.disabled">Проект №35: Заготовка</a>
-            <span class="status-badge">файл не найден</span>
-        </li>
-        <!-- ПРОЕКТ 36 -->
-        <li class="project-item">
-            <a href="projects/project-36.html" class="project-link project-link.disabled">Проект №36: Заготовка</a>
-            <span class="status-badge">файл не найден</span>
-        </li>
-        <!-- ПРОЕКТ 37 -->
-        <li class="project-item">
-            <a href="projects/project-37.html" class="project-link project-link.disabled">Проект №37: Заготовка</a>
-            <span class="status-badge">файл не найден</span>
-        </li>
-        <!-- ПРОЕКТ 38 -->
-        <li class="project-item">
-            <a href="projects/project-38.html" class="project-link project-link.disabled">Проект №38: Заготовка</a>
-            <span class="status-badge">файл не найден</span>
-        </li>
-        <!-- ПРОЕКТ 39 -->
-        <li class="project-item">
-            <a href="projects/project-39.html" class="project-link project-link.disabled">Проект №39: Заготовка</a>
-            <span class="status-badge">файл не найден</span>
-        </li>
-        <!-- ПРОЕКТ 40 -->
-        <li class="project-item">
-            <a href="projects/project-40.html" class="project-link project-link.disabled">Проект №40: Заготовка</a>
-            <span class="status-badge">файл не найден</span>
-        </li>
-        <!-- ПРОЕКТ 41 -->
-        <li class="project-item">
-            <a href="projects/project-41.html" class="project-link project-link.disabled">Проект №41: Заготовка</a>
-            <span class="status-badge">файл не найден</span>
-        </li>
-        <!-- ПРОЕКТ 42 -->
-        <li class="project-item">
-            <a href="projects/project-42.html" class="project-link project-link.disabled">Проект №42: Заготовка</a>
-            <span class="status-badge">файл не найден</span>
-        </li>
-        <!-- ПРОЕКТ 43 -->
-        <li class="project-item">
-            <a href="projects/project-43.html" class="project-link project-link.disabled">Проект №43: Заготовка</a>
-            <span class="status-badge">файл не найден</span>
-        </li>
-        <!-- ПРОЕКТ 44 -->
-        <li class="project-item">
-            <a href="projects/project-44.html" class="project-link project-link.disabled">Проект №44: Заготовка</a>
-            <span class="status-badge">файл не найден</span>
-        </li>
-        <!-- ПРОЕКТ 45 -->
-        <li class="project-item">
-            <a href="projects/project-45.html" class="project-link project-link.disabled">Проект №45: Заготовка</a>
-            <span class="status-badge">файл не найден</span>
-        </li>
-        <!-- ПРОЕКТ 46 -->
-        <li class="project-item">
-            <a href="projects/project-46.html" class="project-link project-link.disabled">Проект №46: Заготовка</a>
-            <span class="status-badge">файл не найден</span>
-        </li>
-        <!-- ПРОЕКТ 47 -->
-        <li class="project-item">
-            <a href="projects/project-47.html" class="project-link project-link.disabled">Проект №47: Заготовка</a>
-            <span class="status-badge">файл не найден</span>
-        </li>
-        <!-- ПРОЕКТ 48 -->
-        <li class="project-item">
-            <a href="projects/project-48.html" class="project-link project-link.disabled">Проект №48: Заготовка</a>
-            <span class="status-badge">файл не найден</span>
-        </li>
-        <!-- ПРОЕКТ 49 -->
-        <li class="project-item">
-            <a href="projects/project-49.html" class="project-link project-link.disabled">Проект №49: Заготовка</a>
-            <span class="status-badge">файл не найден</span>
-        </li>
-        <!-- ПРОЕКТ 50 -->
-        <li class="project-item">
-            <a href="projects/project-50.html" class="project-link project-link.disabled">Проект №50: Заготовка</a>
-            <span class="status-badge">файл не найден</span>
-        </li>
-        <!-- ПРОЕКТ 51 -->
-        <li class="project-item">
-            <a href="projects/project-51.html" class="project-link project-link.disabled">Проект №51: Заготовка</a>
-            <span class="status-badge">файл не найден</span>
-        </li>
-        <!-- ПРОЕКТ 52 -->
-        <li class="project-item">
-            <a href="projects/project-52.html" class="project-link project-link.disabled">Проект №52: Заготовка</a>
-            <span class="status-badge">файл не найден</span>
-        </li>
-        <!-- ПРОЕКТ 53 -->
-        <li class="project-item">
-            <a href="projects/project-53.html" class="project-link project-link.disabled">Проект №53: Заготовка</a>
-            <span class="status-badge">файл не найден</span>
-        </li>
-        <!-- ПРОЕКТ 54 -->
-        <li class="project-item">
-            <a href="projects/project-54.html" class="project-link project-link.disabled">Проект №54: Заготовка</a>
-            <span class="status-badge">файл не найден</span>
-        </li>
-        <!-- ПРОЕКТ 55 -->
-        <li class="project-item">
-            <a href="projects/project-55.html" class="project-link project-link.disabled">Проект №55: Заготовка</a>
-            <span class="status-badge">файл не найден</span>
-        </li>
-        <!-- ПРОЕКТ 56 -->
-        <li class="project-item">
-            <a href="projects/project-56.html" class="project-link project-link.disabled">Проект №56: Заготовка</a>
-            <span class="status-badge">файл не найден</span>
-        </li>
-        <!-- ПРОЕКТ 57 -->
-        <li class="project-item">
-            <a href="projects/project-57.html" class="project-link project-link.disabled">Проект №57: Заготовка</a>
-            <span class="status-badge">файл не найден</span>
-        </li>
-        <!-- ПРОЕКТ 58 -->
-        <li class="project-item">
-            <a href="projects/project-58.html" class="project-link project-link.disabled">Проект №58: Заготовка</a>
-            <span class="status-badge">файл не найден</span>
-        </li>
-        <!-- ПРОЕКТ 59 -->
-        <li class="project-item">
-            <a href="projects/project-59.html" class="project-link project-link.disabled">Проект №59: Заготовка</a>
-            <span class="status-badge">файл не найден</span>
-        </li>
-        <!-- ПРОЕКТ 60 -->
-        <li class="project-item">
-            <a href="projects/project-60.html" class="project-link project-link.disabled">Проект №60: Заготовка</a>
-            <span class="status-badge">файл не найден</span>
-        </li>
-        <!-- ПРОЕКТ 61 -->
-        <li class="project-item">
-            <a href="projects/project-61.html" class="project-link project-link.disabled">Проект №61: Заготовка</a>
-            <span class="status-badge">файл не найден</span>
-        </li>
-        <!-- ПРОЕКТ 62 -->
-        <li class="project-item">
-            <a href="projects/project-62.html" class="project-link project-link.disabled">Проект №62: Заготовка</a>
-            <span class="status-badge">файл не найден</span>
-        </li>
-        <!-- ПРОЕКТ 63 -->
-        <li class="project-item">
-            <a href="projects/project-63.html" class="project-link project-link.disabled">Проект №63: Заготовка</a>
-            <span class="status-badge">файл не найден</span>
-        </li>
-        <!-- ПРОЕКТ 64 -->
-        <li class="project-item">
-            <a href="projects/project-64.html" class="project-link project-link.disabled">Проект №64: Заготовка</a>
-            <span class="status-badge">файл не найден</span>
-        </li>
-        <!-- ПРОЕКТ 65 -->
-        <li class="project-item">
-            <a href="projects/project-65.html" class="project-link project-link.disabled">Проект №65: Заготовка</a>
-            <span class="status-badge">файл не найден</span>
-        </li>
-        <!-- ПРОЕКТ 66 -->
-        <li class="project-item">
-            <a href="projects/project-66.html" class="project-link project-link.disabled">Проект №66: Заготовка</a>
-            <span class="status-badge">файл не найден</span>
-        </li>
-        <!-- ПРОЕКТ 67 -->
-        <li class="project-item">
-            <a href="projects/project-67.html" class="project-link project-link.disabled">Проект №67: Заготовка</a>
-            <span class="status-badge">файл не найден</span>
-        </li>
-        <!-- ПРОЕКТ 68 -->
-        <li class="project-item">
-            <a href="projects/project-68.html" class="project-link project-link.disabled">Проект №68: Заготовка</a>
-            <span class="status-badge">файл не найден</span>
-        </li>
-        <!-- ПРОЕКТ 69 -->
-        <li class="project-item">
-            <a href="projects/project-69.html" class="project-link project-link.disabled">Проект №69: Заготовка</a>
-            <span class="status-badge">файл не найден</span>
-        </li>
-        <!-- ПРОЕКТ 70 -->
-        <li class="project-item">
-            <a href="projects/project-70.html" class="project-link project-link.disabled">Проект №70: Заготовка</a>
-            <span class="status-badge">файл не найден</span>
-        </li>
-        <!-- ПРОЕКТ 71 -->
-        <li class="project-item">
-            <a href="projects/project-71.html" class="project-link project-link.disabled">Проект №71: Заготовка</a>
-            <span class="status-badge">файл не найден</span>
-        </li>
-        <!-- ПРОЕКТ 72 -->
-        <li class="project-item">
-            <a href="projects/project-72.html" class="project-link project-link.disabled">Проект №72: Заготовка</a>
-            <span class="status-badge">файл не найден</span>
-        </li>
-        <!-- ПРОЕКТ 73 -->
-        <li class="project-item">
-            <a href="projects/project-73.html" class="project-link project-link.disabled">Проект №73: Заготовка</a>
-            <span class="status-badge">файл не найден</span>
-        </li>
-        <!-- ПРОЕКТ 74 -->
-        <li class="project-item">
-            <a href="projects/project-74.html" class="project-link project-link.disabled">Проект №74: Заготовка</a>
-            <span class="status-badge">файл не найден</span>
-        </li>
-        <!-- ПРОЕКТ 75 -->
-        <li class="project-item">
-            <a href="projects/project-75.html" class="project-link project-link.disabled">Проект №75: Заготовка</a>
-            <span class="status-badge">файл не найден</span>
-        </li>
-        <!-- ПРОЕКТ 76 -->
-        <li class="project-item">
-            <a href="projects/project-76.html" class="project-link project-link.disabled">Проект №76: Заготовка</a>
-            <span class="status-badge">файл не найден</span>
-        </li>
-        <!-- ПРОЕКТ 77 -->
-        <li class="project-item">
-            <a href="projects/project-77.html" class="project-link project-link.disabled">Проект №77: Заготовка</a>
-            <span class="status-badge">файл не найден</span>
-        </li>
-        <!-- ПРОЕКТ 78 -->
-        <li class="project-item">
-            <a href="projects/project-78.html" class="project-link project-link.disabled">Проект №78: Заготовка</a>
-            <span class="status-badge">файл не найден</span>
-        </li>
-        <!-- ПРОЕКТ 79 -->
-        <li class="project-item">
-            <a href="projects/project-79.html" class="project-link project-link.disabled">Проект №79: Заготовка</a>
-            <span class="status-badge">файл не найден</span>
-        </li>
-        <!-- ПРОЕКТ 80 -->
-        <li class="project-item">
-            <a href="projects/project-80.html" class="project-link project-link.disabled">Проект №80: Заготовка</a>
-            <span class="status-badge">файл не найден</span>
-        </li>
-        <!-- ПРОЕКТ 81 -->
-        <li class="project-item">
-            <a href="projects/project-81.html" class="project-link project-link.disabled">Проект №81: Заготовка</a>
-            <span class="status-badge">файл не найден</span>
-        </li>
-        <!-- ПРОЕКТ 82 -->
-        <li class="project-item">
-            <a href="projects/project-82.html" class="project-link project-link.disabled">Проект №82: Заготовка</a>
-            <span class="status-badge">файл не найден</span>
-        </li>
-        <!-- ПРОЕКТ 83 -->
-        <li class="project-item">
-            <a href="projects/project-83.html" class="project-link project-link.disabled">Проект №83: Заготовка</a>
-            <span class="status-badge">файл не найден</span>
-        </li>
-        <!-- ПРОЕКТ 84 -->
-        <li class="project-item">
-            <a href="projects/project-84.html" class="project-link project-link.disabled">Проект №84: Заготовка</a>
-            <span class="status-badge">файл не найден</span>
-        </li>
-        <!-- ПРОЕКТ 85 -->
-        <li class="project-item">
-            <a href="projects/project-85.html" class="project-link project-link.disabled">Проект №85: Заготовка</a>
-            <span class="status-badge">файл не найден</span>
-        </li>
-        <!-- ПРОЕКТ 86 -->
-        <li class="project-item">
-            <a href="projects/project-86.html" class="project-link project-link.disabled">Проект №86: Заготовка</a>
-            <span class="status-badge">файл не найден</span>
-        </li>
-        <!-- ПРОЕКТ 87 -->
-        <li class="project-item">
-            <a href="projects/project-87.html" class="project-link project-link.disabled">Проект №87: Заготовка</a>
-            <span class="status-badge">файл не найден</span>
-        </li>
-        <!-- ПРОЕКТ 88 -->
-        <li class="project-item">
-            <a href="projects/project-88.html" class="project-link project-link.disabled">Проект №88: Заготовка</a>
-            <span class="status-badge">файл не найден</span>
-        </li>
-        <!-- ПРОЕКТ 89 -->
-        <li class="project-item">
-            <a href="projects/project-89.html" class="project-link project-link.disabled">Проект №89: Заготовка</a>
-            <span class="status-badge">файл не найден</span>
-        </li>
-        <!-- ПРОЕКТ 90 -->
-        <li class="project-item">
-            <a href="projects/project-90.html" class="project-link project-link.disabled">Проект №90: Заготовка</a>
-            <span class="status-badge">файл не найден</span>
-        </li>
-        <!-- ПРОЕКТ 91 -->
-        <li class="project-item">
-            <a href="projects/project-91.html" class="project-link project-link.disabled">Проект №91: Заготовка</a>
-            <span class="status-badge">файл не найден</span>
-        </li>
-        <!-- ПРОЕКТ 92 -->
-        <li class="project-item">
-            <a href="projects/project-92.html" class="project-link project-link.disabled">Проект №92: Заготовка</a>
-            <span class="status-badge">файл не найден</span>
-        </li>
-        <!-- ПРОЕКТ 93 -->
-        <li class="project-item">
-            <a href="projects/project-93.html" class="project-link project-link.disabled">Проект №93: Заготовка</a>
-            <span class="status-badge">файл не найден</span>
-        </li>
-        <!-- ПРОЕКТ 94 -->
-        <li class="project-item">
-            <a href="projects/project-94.html" class="project-link project-link.disabled">Проект №94: Заготовка</a>
-            <span class="status-badge">файл не найден</span>
-        </li>
-        <!-- ПРОЕКТ 95 -->
-        <li class="project-item">
-            <a href="projects/project-95.html" class="project-link project-link.disabled">Проект №95: Заготовка</a>
-            <span class="status-badge">файл не найден</span>
-        </li>
-        <!-- ПРОЕКТ 96 -->
-        <li class="project-item">
-            <a href="projects/project-96.html" class="project-link project-link.disabled">Проект №96: Заготовка</a>
-            <span class="status-badge">файл не найден</span>
-        </li>
-        <!-- ПРОЕКТ 97 -->
-        <li class="project-item">
-            <a href="projects/project-97.html" class="project-link project-link.disabled">Проект №97: Заготовка</a>
-            <span class="status-badge">файл не найден</span>
-        </li>
-        <!-- ПРОЕКТ 98 -->
-        <li class="project-item">
-            <a href="projects/project-98.html" class="project-link project-link.disabled">Проект №98: Заготовка</a>
-            <span class="status-badge">файл не найден</span>
-        </li>
-        <!-- ПРОЕКТ 99 -->
-        <li class="project-item">
-            <a href="projects/project-99.html" class="project-link project-link.disabled">Проект №99: Заготовка</a>
-            <span class="status-badge">файл не найден</span>
-        </li>
-        <!-- ПРОЕКТ 100 -->
-        <li class="project-item">
-            <a href="projects/project-100.html" class="project-link project-link.disabled">Проект №100: Заготовка</a>
-            <span class="status-badge">файл не найден</span>
-        </li>
-    </ul>
+    <p class="subtitle">Серые пункты — файл ещё не загружен в папку projects</p>
+
+    <ul class="project-list" id="project-list"></ul>
+    <p class="error-note" id="error-note" style="display:none;"></p>
+
+    <script>
+        const OWNER  = 'skaratel-hub';
+        const REPO   = 'skaratel-hub.github.io';
+        const FOLDER = 'projects';
+        const TOTAL  = 100;
+
+        async function loadProjects() {
+            const list = document.getElementById('project-list');
+            const err  = document.getElementById('error-note');
+            let files = [];
+
+            try {
+                const res = await fetch(
+                    'https://api.github.com/repos/' + OWNER + '/' + REPO +
+                    '/contents/' + FOLDER
+                );
+                if (!res.ok) throw new Error('Сервер ответил ошибкой ' + res.status);
+                files = await res.json();
+            } catch (e) {
+                // Если нет интернета или превышен лимит API — покажем локальную заглушку
+                err.style.display = 'block';
+                err.textContent = 'Не удалось загрузить список с GitHub. ' +
+                    'Проверьте интернет и обновите страницу.';
+                return;
+            }
+
+            // Разбираем имена файлов: project-<номер>_<Название>.html
+            const found = {};
+            let maxNum = 0;
+            for (const f of files) {
+                const m = f.name.match(/^project-(\d+)(?:_(.*))?\.html$/i);
+                if (m) {
+                    const num  = parseInt(m[1], 10);
+                    const name = m[2] ? m[2].replace(/_/g, ' ') : '';
+                    found[num] = { fileName: f.name, title: name };
+                    if (num > maxNum) maxNum = num;
+                }
+            }
+
+            const last = Math.max(TOTAL, maxNum);
+            for (let i = 1; i <= last; i++) {
+                const li = document.createElement('li');
+                if (found[i]) {
+                    const p = found[i];
+                    const shown = p.title ? ('Проект №' + i + ': ' + p.title)
+                                          : ('Проект №' + i);
+                    li.className = 'project-item';
+                    li.innerHTML =
+                        '<a class="project-link" href="projects/' + p.fileName + '">' +
+                        shown + '</a>' +
+                        '<span class="status-badge ready">готов</span>';
+                } else {
+                    li.className = 'project-item';
+                    li.innerHTML =
+                        '<span class="project-link disabled">Проект №' + i + '</span>' +
+                        '<span class="status-badge">файл не найден</span>';
+                }
+                list.appendChild(li);
+            }
+        }
+
+        loadProjects();
+    </script>
 </body>
 </html>
