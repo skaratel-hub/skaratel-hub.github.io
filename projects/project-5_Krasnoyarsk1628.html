@@ -1,1 +1,809 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Красноярск: История, Народы и Рекорды</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            background: #f5f2e8;
+            font-family: 'Segoe UI', 'Roboto', system-ui, sans-serif;
+            padding: 2rem 1rem;
+            color: #1e2b2c;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+        h1 { font-weight: 500; font-size: 2.2rem; letter-spacing: 1px; margin-bottom: 0.25rem; color: #1e3b3b; border-bottom: 3px solid #b9a88b; padding-bottom: 0.5rem; text-align: center; }
+        .subhead { color: #4e5e5e; margin-bottom: 1.5rem; font-style: italic; font-size: 1.1rem; text-align: center; }
 
+        /* Главные вкладки */
+        .main-tabs { display: flex; justify-content: center; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+        .main-tab-btn {
+            background: #e9e0d0; border: 2px solid #cbbca5; border-radius: 30px; padding: 0.8rem 2rem;
+            font-size: 1.1rem; font-weight: 600; color: #2d423c; cursor: pointer; transition: 0.2s;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+        .main-tab-btn:hover { background: #d9cfbd; }
+        .main-tab-btn.active { background: #a28e6b; color: white; border-color: #8a7656; box-shadow: 0 4px 12px rgba(162, 142, 107, 0.4); }
+
+        .main-content { display: none; width: 100%; max-width: 1300px; animation: fadeIn 0.3s ease; }
+        .main-content.active { display: block; }
+
+        /* Внутренние вкладки */
+        .sub-tabs { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.5rem; margin-bottom: 1.5rem; }
+        .sub-tab-btn {
+            background: #fefcf7; border: 1px solid #cbbca5; border-radius: 20px; padding: 0.5rem 1.2rem;
+            font-size: 0.9rem; font-weight: 500; color: #4a5a4a; cursor: pointer; transition: 0.15s;
+        }
+        .sub-tab-btn:hover { background: #efe7db; }
+        .sub-tab-btn.active { background: #7a9a6a; color: white; border-color: #688a58; }
+
+        .sub-content { display: none; width: 100%; animation: fadeIn 0.3s ease; }
+        .sub-content.active { display: block; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Карточки */
+        .branch {
+            background: #e9e0d0; border-radius: 32px 32px 16px 16px; padding: 1.4rem; margin-bottom: 1.8rem;
+            box-shadow: 0 6px 14px rgba(0, 0, 0, 0.06), inset 0 1px 4px rgba(255, 255, 255, 0.7);
+            border-left: 8px solid #b29e7c;
+        }
+        .branch-title { font-size: 1.5rem; font-weight: 600; margin-bottom: 1rem; padding-left: 0.5rem; color: #2d423c; display: flex; align-items: center; flex-wrap: wrap; gap: 0.6rem; }
+        .branch-title span { background: #a28e6b; color: white; font-size: 0.85rem; padding: 0.2rem 0.9rem; border-radius: 30px; font-weight: 400; }
+
+        .cards { display: flex; flex-wrap: wrap; gap: 1.2rem; justify-content: flex-start; }
+        .card {
+            background: #fefcf7; border-radius: 24px; padding: 1.25rem; flex: 1 1 280px; max-width: 420px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.04), 0 0 0 1px #dfd6c6; transition: 0.15s ease;
+            display: flex; flex-direction: column; border-top: 4px solid #cabda7;
+        }
+        .card:hover { box-shadow: 0 8px 18px rgba(80, 60, 30, 0.08); transform: translateY(-2px); }
+        .card.wide { max-width: 620px; flex: 1 1 500px; }
+        .card h3 { font-size: 1.35rem; font-weight: 600; margin-bottom: 0.4rem; color: #303d34; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; }
+        .card h3 .status { font-size: 0.75rem; background: #ddd3c2; padding: 0.15rem 0.75rem; border-radius: 20px; font-weight: 400; color: #3d4b3f; }
+        .card p { font-size: 0.98rem; line-height: 1.55; color: #2e3a32; margin: 0.7rem 0 1rem 0; flex: 1; }
+
+        .details { background: #f6f1e7; border-radius: 16px; padding: 0.85rem 1rem; margin: 0.2rem 0 0.9rem 0; font-size: 0.92rem; line-height: 1.6; color: #2b3a32; border-left: 5px solid #b7a68b; box-shadow: inset 0 0 0 1px #ebe3d6; }
+        .details strong { color: #1e362f; font-weight: 600; }
+        .details ul { margin: 0.4rem 0 0.2rem 1.1rem; padding: 0; }
+        .details li { margin-bottom: 0.35rem; }
+        .lex { font-family: 'Courier New', monospace; background: #efe7d8; padding: 0.1rem 0.3rem; border-radius: 4px; font-size: 0.9rem; }
+
+        .joke-box { background: #fff8e7; border-left: 5px solid #d4b87a; padding: 0.85rem 1rem; border-radius: 12px; margin: 0.8rem 0; font-style: italic; color: #4a3a2a; font-size: 0.95rem; box-shadow: inset 0 0 0 1px #f0e6d2; }
+
+        .photo-container { margin: 1rem 0; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1); background: #fff; }
+        .photo-container img { width: 100%; height: auto; display: block; }
+        .photo-caption { font-size: 0.8rem; color: #5a6a5a; padding: 0.5rem; text-align: center; font-style: italic; background: #f6f1e7; }
+        .photo-row { display: flex; flex-wrap: wrap; gap: 1rem; margin: 1rem 0; }
+        .photo-item { flex: 1 1 300px; background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        .photo-item img { width: 100%; height: auto; display: block; }
+
+        .btn-row { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.3rem; align-items: center; }
+        .speak-btn, .stop-btn {
+            background: #d9cfbd; border: 1px solid #cbbca5; border-radius: 40px; padding: 0.5rem 1.1rem 0.5rem 1rem;
+            font-size: 0.9rem; font-weight: 500; color: #1e2b24; display: inline-flex; align-items: center; gap: 0.45rem;
+            cursor: pointer; transition: background 0.15s, box-shadow 0.15s; box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .speak-btn:hover, .stop-btn:hover { background: #cbbca5; box-shadow: 0 4px 8px rgba(0,0,0,0.08); }
+        .speak-btn:active, .stop-btn:active { transform: scale(0.97); }
+        .stop-btn { background: #e2d6c5; border-color: #d4c2ab; color: #6b3a2a; padding: 0.5rem 1rem 0.5rem 0.9rem; }
+        .stop-btn:hover { background: #d4c2ab; }
+        .speak-btn svg, .stop-btn svg { width: 18px; height: 18px; fill: currentColor; flex-shrink: 0; }
+        .speaking { background: #c0b09b !important; box-shadow: 0 0 0 2px #a28e6b inset; }
+        .stop-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; box-shadow: none; }
+
+        .voice-panel { background: #e9e0d0; border-radius: 40px; padding: 0.8rem 1.5rem; margin-bottom: 2rem; display: flex; flex-wrap: wrap; align-items: center; gap: 0.8rem 1.2rem; box-shadow: 0 2px 8px rgba(0,0,0,0.06); border: 1px solid #d6cbb8; }
+        .voice-panel label { font-size: 0.95rem; font-weight: 500; color: #2d423c; }
+        .voice-panel select { background: #fefcf7; border: 1px solid #cbbca5; border-radius: 30px; padding: 0.45rem 1rem; font-size: 0.9rem; color: #1e2b24; cursor: pointer; outline: none; max-width: 320px; }
+        .voice-panel .hint { font-size: 0.8rem; color: #6b7a6b; font-style: italic; }
+
+        @media (max-width: 700px) {
+            body { padding: 1.2rem 0.8rem; }
+            h1 { font-size: 1.8rem; }
+            .branch { padding: 1rem; }
+            .card { max-width: 100%; }
+            .card.wide { max-width: 100%; flex: 1 1 100%; }
+            .voice-panel { padding: 0.7rem 1rem; gap: 0.6rem 0.9rem; }
+            .voice-panel select { max-width: 200px; }
+            .main-tab-btn { padding: 0.6rem 1.2rem; font-size: 1rem; }
+        }
+    </style>
+</head>
+<body>
+    <h1>🌳 Красноярск: История и Рекорды</h1>
+    <div class="subhead">генеалогическое древо народов · мировые связи · достижения</div>
+
+    <div class="voice-panel">
+        <label for="voiceSelect">🎤 Голос для озвучки:</label>
+        <select id="voiceSelect"><option value="">— загрузка голосов… —</option></select>
+        <span class="hint">по умолчанию Google русский ⭐</span>
+    </div>
+
+    <!-- ГЛАВНЫЕ ВКЛАДКИ -->
+    <div class="main-tabs">
+        <button class="main-tab-btn active" data-main="main-history">📜 Народы и топонимика</button>
+        <button class="main-tab-btn" data-main="main-facts">✨ Интересные факты</button>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- ЧАСТЬ 1: НАРОДЫ И ТОПОНИМИКА -->
+    <!-- ========================================== -->
+    <div id="main-history" class="main-content active">
+        <div class="sub-tabs">
+            <button class="sub-tab-btn active" data-sub="sub-tyurki">Тюрки</button>
+            <button class="sub-tab-btn" data-sub="sub-enisey">Енисейцы</button>
+            <button class="sub-tab-btn" data-sub="sub-samodiycy">Самодийцы</button>
+            <button class="sub-tab-btn" data-sub="sub-pismo">Письменность</button>
+            <button class="sub-tab-btn" data-sub="sub-toponimika">Топонимика</button>
+        </div>
+
+        <!-- Тюрки -->
+        <div id="sub-tyurki" class="sub-content active">
+            <div class="branch" style="border-left-color: #b0885c;">
+                <div class="branch-title">Тюркская языковая группа <span>тюрки</span></div>
+                <div class="cards">
+                    <div class="card wide">
+                        <h3>Енисейские кыргызы <span class="status">каганат</span></h3>
+                        <p>Тюркоязычный народ, создавший Кыргызский каганат (конец VII – начало XIII в.). Центр — Хакасско-Минусинская котловина. Собирали дань с аринцев и качинцев. После монгольского нашествия (1207 г.) часть ушла на Тянь-Шань, остальные стали основой хакасов.</p>
+                        <div class="details">
+                            <strong>📜 Подробнее о Кыргызском каганате</strong>
+                            <ul>
+                                <li><strong>Время:</strong> конец VII – начало XIII в. (с 693 по 1207 год).</li>
+                                <li><strong>Территория:</strong> Хакасско-Минусинская котловина, до Саян и Алтая.</li>
+                                <li><strong>Падение:</strong> в 1207 году завоёван монголами под предводительством Джучи.</li>
+                                <li><strong>Судьба:</strong> часть ушла на Тянь-Шань, оставшиеся стали основой хакасов.</li>
+                            </ul>
+                        </div>
+                        <div class="details" style="border-left-color: #a08060;">
+                            <strong>🏔️ Что такое Тянь-Шань и при чём тут кыргызы</strong>
+                            <ul>
+                                <li><strong>Тянь-Шань</strong> — горная система в Центральной Азии (Кыргызстан, Китай, Казахстан, Узбекистан, Таджикистан).</li>
+                                <li>После 1207 года часть кыргызов ушла на Тянь-Шань, смешалась с местными племенами и стала компонентом современного кыргызского народа.</li>
+                                <li>Современные кыргызы пользуются кириллицей, исторически — арабской вязью (справа налево).</li>
+                            </ul>
+                        </div>
+                        <div class="btn-row">
+                            <button class="speak-btn" data-speak="Енисейские кыргызы. Тюркоязычный народ, создавший Кыргызский каганат в конце седьмого — начале тринадцатого века. Центр — Хакасско-Минусинская котловина. Собирали дань с аринцев и качинцев. Подробнее о Кыргызском каганате. Время существования: примерно с конца седьмого до начала тринадцатого века, по разным оценкам, с 693 по 1207 год. Территория: Хакасско-Минусинская котловина — центр государства. Падение: в 1207 году каганат был завоёван монголами под предводительством Джучи. Судьба народа: часть кыргызов ушла на Тянь-Шань, оставшиеся стали основой хакасов. Что такое Тянь-Шань. Тянь-Шань — крупная горная система в Центральной Азии. Основная часть находится в Кыргызстане и Китае, а также заходит в Казахстан, Узбекистан и Таджикистан. После разгрома каганата часть кыргызов ушла на Тянь-Шань и смешалась с местными тюркоязычными племенами, став одним из компонентов современного кыргызского народа. Современные кыргызы пользуются кириллицей. Исторически в Средней Азии был распространён арабский алфавит, который пишется справа налево.">
+                                <svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+                                Озвучить
+                            </button>
+                            <button class="stop-btn" disabled><svg viewBox="0 0 24 24"><path d="M6 6h12v12H6z"/></svg> Стоп</button>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3>Качинцы <span class="status">хакасы</span></h3>
+                        <p>Тюркоязычная группа в составе хакасов (самоназвание «хаас/хааш»). Русское название — от реки Кача. В XVII в. под Красноярском их было около 350 человек. Часть аринцев влилась в качинцев.</p>
+                        <div class="details">
+                            <ul>
+                                <li><strong>Связь с рекой Кача:</strong> Река называлась <strong>Изыр-Су</strong>, люди звали себя <strong>«изыр-кичи»</strong> («кичи» — люди). Русские переделали «кичи» в «качи» — отсюда качинцы и Кача.</li>
+                            </ul>
+                        </div>
+                        <div class="btn-row">
+                            <button class="speak-btn" data-speak="Качинцы. Тюркоязычная группа, сейчас в составе хакасов, самоназвание хаас или хааш. Русское название от реки Кача под Красноярском. В семнадцатом веке под Красноярском их было около трёхсот пятидесяти человек. Связь с рекой Кача. Река, на которой жили предки качинцев, называлась Изыр-Су. Сами себя они называли изыр-кичи, что значит люди. Русским было трудно произносить кичи, и они заменили его на качи. Отсюда и пошло название народа — качинцы, а река стала Качей.">
+                                <svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+                                Озвучить
+                            </button>
+                            <button class="stop-btn" disabled><svg viewBox="0 0 24 24"><path d="M6 6h12v12H6z"/></svg> Стоп</button>
+                        </div>
+                    </div>
+
+                    <div class="card wide">
+                        <h3>Аринцы <span class="status">вымерли</span></h3>
+                        <p>Коренной народ енисейской языковой семьи, живший по Енисею в районе нынешнего Красноярска. Не тюрки и не самодийцы. К 1628 г. их было около 640 человек. Язык исчез к 1740-м, народ ассимилирован.</p>
+                        <div class="details">
+                            <strong>📖 Подробнее об аринцах</strong>
+                            <ul>
+                                <li><strong>Численность:</strong> к 1608 году около 1500 человек; к 1628 году — около 640; к 1700 году оставалось 81 ясачный аринец.</li>
+                                <li><strong>Территория:</strong> западная часть долины Енисея от устья Качи до порогов.</li>
+                                <li><strong>Язык:</strong> енисейская семья, вместе с пумпокольским — арино-пумпокольская группа. Последний носитель умер около 1740 года.</li>
+                                <li><strong>Письменность:</strong> отсутствовала.</li>
+                                <li><strong>Ассимиляция:</strong> часть вошла в качинцев, часть растворилась среди русских.</li>
+                                <li><strong>Топонимика:</strong> остров Татышев назван в честь аринского князя, Аринская улица, река Бугач, деревня Бугачево.</li>
+                            </ul>
+                        </div>
+                        <div class="details" style="border-left-color: #8a9a6a;">
+                            <strong>📝 Примеры аринской лексики</strong>
+                            <ul>
+                                <li><span class="lex">kina</span> — «два» (ср. пумп. <span class="lex">hineang</span>)</li>
+                                <li><span class="lex">paj</span> — «ветер» (ср. пумп. <span class="lex">baj</span>)</li>
+                                <li><span class="lex">pieng</span> — «земля» (ср. пумп. <span class="lex">bing</span>)</li>
+                                <li><span class="lex">atie</span> — «живой» (ср. пумп. <span class="lex">atodu</span>)</li>
+                                <li><span class="lex">t’a:ma</span> — «белый» (ср. пумп. <span class="lex">tam-xo</span>)</li>
+                            </ul>
+                        </div>
+                        <div class="btn-row">
+                            <button class="speak-btn" data-speak="Аринцы. Коренной народ енисейской языковой семьи, живший по Енисею в районе нынешнего Красноярска. Не тюрки и не самодийцы. К приходу русских в 1628 году их было около шестисот сорока человек. Язык исчез к 1740-м годам, народ был ассимилирован качинцами и русскими. Подробнее об аринцах. Численность: к 1608 году около тысячи пятисот человек; к 1628 году около шестисот сорока. Территория: западная часть долины Енисея от устья реки Качи до порогов. Язык относился к енисейской семье, составлял вместе с пумпокольским особую арино-пумпокольскую группу. Письменность отсутствовала. Ассимиляция: аринцы находились между русскими острогами и набегами енисейских кыргызов. К девятнадцатому веку аринцев как отдельного народа не существовало. Примеры аринской лексики: kina — два, paj — ветер, pieng — земля, atie — живой, t’a:ma — белый.">
+                                <svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+                                Озвучить
+                            </button>
+                            <button class="stop-btn" disabled><svg viewBox="0 0 24 24"><path d="M6 6h12v12H6z"/></svg> Стоп</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Енисейцы -->
+        <div id="sub-enisey" class="sub-content">
+            <div class="branch" style="border-left-color: #8a9a8a;">
+                <div class="branch-title">Енисейская языковая семья <span>аринцы · пумпоколы · кеты</span></div>
+                <div class="cards">
+                    <div class="card wide">
+                        <h3>Пумпоколы <span class="status">исчезли</span></h3>
+                        <p>Енисейский народ, живший в верховьях реки Кеть и по Чулыму. Вместе с аринцами составляли арино-пумпокольскую группу. Язык вышел из употребления во второй половине XVIII века.</p>
+                        <div class="details">
+                            <strong>📖 Подробнее</strong>
+                            <ul>
+                                <li><strong>Расселение:</strong> верховья Кети, бассейн Чулыма выше Асино.</li>
+                                <li><strong>Численность:</strong> в первой четверти XVII века — всего 34–35 человек.</li>
+                                <li><strong>Язык:</strong> енисейская семья, арино-пумпокольская группа.</li>
+                                <li><strong>Письменность:</strong> отсутствовала.</li>
+                            </ul>
+                        </div>
+                        <div class="details" style="border-left-color: #8a9a6a;">
+                            <strong>📝 Примеры пумпокольской лексики (счёт 1–10)</strong>
+                            <ul>
+                                <li><span class="lex">xúta</span> — 1</li>
+                                <li><span class="lex">híneang</span> — 2</li>
+                                <li><span class="lex">dónga</span> — 3</li>
+                                <li><span class="lex">cía-ng</span> — 4</li>
+                                <li><span class="lex">xej-lang</span> — 5</li>
+                                <li><span class="lex">ággiang</span> — 6</li>
+                                <li><span class="lex">ón’ang</span> — 7</li>
+                                <li><span class="lex">hinbásiang</span> — 8</li>
+                                <li><span class="lex">xúta-hamósa-xajáng</span> — 9</li>
+                                <li><span class="lex">xajáng</span> — 10</li>
+                            </ul>
+                            <p style="margin-top: 0.4rem; font-size: 0.85rem; color: #5a6a5a;">Также: <span class="lex">фохириць</span> — «свинья», <span class="lex">ирдлег</span> — «труд», <span class="lex">етыкеть</span> — «здоров», <span class="lex">буегь</span> — «они».</p>
+                        </div>
+                        <div class="btn-row">
+                            <button class="speak-btn" data-speak="Пумпоколы. Енисейский народ, живший в верховьях реки Кеть и по Чулыму. Вместе с аринцами составляли арино-пумпокольскую группу. Язык вышел из употребления во второй половине восемнадцатого века. К концу двадцатого века пумпоколы были полностью ассимилированы. Расселение: Пумпокольская волость — верховья реки Кеть и бассейн Чулыма выше города Асино. Численность: в первой четверти семнадцатого века ясачных пумпоколов насчитывалось всего тридцать четыре — тридцать пять человек. Язык относился к енисейской семье. Письменность отсутствовала. Примеры пумпокольской лексики, счёт от одного до десяти: хута — один, хинеанг — два, донга — три, циа-нг — четыре, хей-ланг — пять, аггианг — шесть, он анг — семь, хинбасианг — восемь, хута-хамоса-хаянг — девять, хаянг — десять.">
+                                <svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+                                Озвучить
+                            </button>
+                            <button class="stop-btn" disabled><svg viewBox="0 0 24 24"><path d="M6 6h12v12H6z"/></svg> Стоп</button>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3>Кеты <span class="status">родственники</span></h3>
+                        <p>Современный народ енисейской семьи, живущий по Енисею. Аринцы и пумпоколы были их дальними родственниками по языку.</p>
+                        <div class="btn-row">
+                            <button class="speak-btn" data-speak="Кеты. Современный народ енисейской семьи, живущий по Енисею. Аринцы и пумпоколы были их дальними родственниками по языку, но к восемнадцатому веку полностью исчезли.">
+                                <svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+                                Озвучить
+                            </button>
+                            <button class="stop-btn" disabled><svg viewBox="0 0 24 24"><path d="M6 6h12v12H6z"/></svg> Стоп</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Самодийцы -->
+        <div id="sub-samodiycy" class="sub-content">
+            <div class="branch" style="border-left-color: #9aa87b;">
+                <div class="branch-title">Самодийская языковая группа <span>север</span></div>
+                <div class="cards">
+                    <div class="card wide">
+                        <h3>Самодийцы <span class="status">группа народов</span></h3>
+                        <p>Языковая общность уральской семьи. Включает ненцев, энцев, нганасан, селькупов, а также исчезнувших камасинцев и маторов.</p>
+                        <div class="btn-row">
+                            <button class="speak-btn" data-speak="Самодийцы. Языковая общность уральской семьи. В неё входят ненцы, энцы, нганасаны, селькупы, а также исчезнувшие камасинцы и маторы. В районе Мангазеи на реке Таз жили в основном предки ненцев и энцев. В районе нынешнего Красноярска основным населением не были — жили севернее, в тайге и тундре.">
+                                <svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+                                Озвучить
+                            </button>
+                            <button class="stop-btn" disabled><svg viewBox="0 0 24 24"><path d="M6 6h12v12H6z"/></svg> Стоп</button>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3>Ненцы <span class="status">самый многочисленный</span></h3>
+                        <p>Самый крупный самодийский народ России. Живут от Архангельской области до правобережья Енисея, в т.ч. в Красноярском крае. Язык — ненецкий. Письменность с 1932 г.</p>
+                        <div class="details">
+                            <ul>
+                                <li><strong>Численность:</strong> 44,6 тыс. чел. (2010).</li>
+                                <li><strong>Самоназвание:</strong> «ненэць» — «человек».</li>
+                                <li><strong>Группы:</strong> тундровые и лесные ненцы.</li>
+                                <li><strong>Занятия:</strong> оленеводство, охота, рыболовство.</li>
+                            </ul>
+                        </div>
+                        <div class="btn-row">
+                            <button class="speak-btn" data-speak="Ненцы. Самый крупный самодийский народ России. Живут от Архангельской области до правобережья Енисея, в том числе в Красноярском крае, около трёх тысяч шестисот человек. Численность сорок четыре тысячи шестьсот человек по переписи 2010 года. Самоназвание ненэць — человек. Делятся на тундровых и лесных ненцев. Язык ненецкий, относится к северной подгруппе самодийской ветви уральских языков. Письменность создана в 1932 году на латинице, с 1937 года на кириллице. Основные занятия: крупнотабунное оленеводство, охота, рыболовство.">
+                                <svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+                                Озвучить
+                            </button>
+                            <button class="stop-btn" disabled><svg viewBox="0 0 24 24"><path d="M6 6h12v12H6z"/></svg> Стоп</button>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3>Энцы <span class="status">малочисленный</span></h3>
+                        <p>Живут на правобережье нижнего Енисея в Таймырском районе Красноярского края. Делятся на тундровых и лесных. Язык — энецкий (около 40 носителей).</p>
+                        <div class="details">
+                            <ul>
+                                <li><strong>Численность:</strong> 227 чел. (2010).</li>
+                                <li><strong>Самоназвание:</strong> «эннэчэ» — «настоящий человек».</li>
+                                <li><strong>Связь с Мангазеей:</strong> в русских источниках энцы — <strong>«молгонзеи»</strong> (от рода Мункаси), это название легло в основу топонима <strong>Мангазея</strong>.</li>
+                            </ul>
+                        </div>
+                        <div class="btn-row">
+                            <button class="speak-btn" data-speak="Энцы. Живут на правобережье нижнего Енисея в Таймырском районе Красноярского края. Делятся на тундровых и лесных. Численность двести двадцать семь человек по переписи 2010 года. Самоназвание эннэчэ — настоящий человек. Связь с Мангазеей: в русских источниках энцы впервые упоминаются как молгонзеи, от земли рода Мункаси. Именно это название легло в основу топонима Мангазея. Язык энецкий, сохраняется у старшего поколения, около сорока человек. Лесные энцы близки по культуре к енисейским ненцам, тундровые — к нганасанам.">
+                                <svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+                                Озвучить
+                            </button>
+                            <button class="stop-btn" disabled><svg viewBox="0 0 24 24"><path d="M6 6h12v12H6z"/></svg> Стоп</button>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3>Нганасаны <span class="status">Таймыр</span></h3>
+                        <p>Самый северный народ Евразии, живут в Таймырском районе. Происходят от древнейшего населения Таймыра. Язык — нганасанский (около 120 носителей).</p>
+                        <div class="details">
+                            <ul>
+                                <li><strong>Численность:</strong> около 900 чел. (2010).</li>
+                                <li><strong>Самоназвание:</strong> «ня» — «товарищ».</li>
+                                <li><strong>Занятия:</strong> охота на дикого оленя, оленеводство, рыболовство.</li>
+                            </ul>
+                        </div>
+                        <div class="btn-row">
+                            <button class="speak-btn" data-speak="Нганасаны. Самый северный народ Евразии, живут в Таймырском районе Красноярского края. Численность около девятисот человек по переписи 2010 года. Самоназвание ня — товарищ. Происходят от древнейшего населения Таймыра, которое переняло язык и культуру пришедших с юга самодийских племён. Язык нганасанский, сохраняется у около ста двадцати человек. Основные занятия: охота на дикого оленя, оленеводство, заимствованное у ненцев и энцев в девятнадцатом веке, и рыболовство.">
+                                <svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+                                Озвучить
+                            </button>
+                            <button class="stop-btn" disabled><svg viewBox="0 0 24 24"><path d="M6 6h12v12H6z"/></svg> Стоп</button>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3>Селькупы <span class="status">таёжный народ</span></h3>
+                        <p>Живут в Ямало-Ненецком округе, Тюменской и Томской областях, а также в Красноярском крае (село Фарково). Язык — селькупский.</p>
+                        <div class="details">
+                            <ul>
+                                <li><strong>Численность:</strong> около 3,6 тыс. чел. (2010).</li>
+                                <li><strong>Самоназвание:</strong> «соль-куп» — «таёжный человек».</li>
+                            </ul>
+                        </div>
+                        <div class="btn-row">
+                            <button class="speak-btn" data-speak="Селькупы. Живут в Ямало-Ненецком округе, Тюменской и Томской областях, а также в Красноярском крае, в селе Фарково. Делятся на северных и южных. Численность около трёх тысяч шестисот человек по переписи 2010 года. Самоназвание соль-куп — таёжный человек. Язык селькупский, письменность создана в тридцатых годах двадцатого века, но стабильной нормы не имеет.">
+                                <svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+                                Озвучить
+                            </button>
+                            <button class="stop-btn" disabled><svg viewBox="0 0 24 24"><path d="M6 6h12v12H6z"/></svg> Стоп</button>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3>Камасинцы <span class="status">исчезли</span></h3>
+                        <p>Исчезнувший самодийский народ, живший в Саянах на юге Красноярского края. Язык — камасинский. Ассимилированы к началу XX века. Последний носитель умер в 1989 году.</p>
+                        <div class="btn-row">
+                            <button class="speak-btn" data-speak="Камасинцы. Исчезнувший самодийский народ, живший в Саянах на юге Красноярского края, в бассейне реки Кан. Язык камасинский, относился к саянской группе самодийской ветви. Делились на таёжных охотников и степных скотоводов. Были близки к маторам и койбалам. Ассимилированы русскими и хакасами к началу двадцатого века. Последний носитель камасинского языка умер в 1989 году.">
+                                <svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+                                Озвучить
+                            </button>
+                            <button class="stop-btn" disabled><svg viewBox="0 0 24 24"><path d="M6 6h12v12H6z"/></svg> Стоп</button>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3>Маторы <span class="status">вымерли</span></h3>
+                        <p>Исчезнувший самодийский народ, обитавший в долине реки Тубы (юг Красноярского края). Занимались оленеводством и охотой. Исчезли к XIX веку.</p>
+                        <div class="btn-row">
+                            <button class="speak-btn" data-speak="Маторы, или маторцы. Исчезнувший самодийский народ, обитавший на северных склонах Саян в долине реки Тубы и её притока Амыла, на юге Красноярского края. Занимались домашним оленеводством и охотой на пушного зверя. Язык маторский, относился к саянской группе самодийской ветви. Были близки к камасинцам, койбалам и селькупам. Исчезли к девятнадцатому веку, к 1839 году, отчасти из-за ассимиляции русскими и хакасами, отчасти из-за эпидемии оспы.">
+                                <svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+                                Озвучить
+                            </button>
+                            <button class="stop-btn" disabled><svg viewBox="0 0 24 24"><path d="M6 6h12v12H6z"/></svg> Стоп</button>
+                        </div>
+                    </div>
+
+                    <div class="card wide" style="border-top-color: #b09060;">
+                        <h3>Молгонзеи → Мангазея <span class="status">этимология</span></h3>
+                        <p>Один из немногих топонимов Сибири, напрямую связанных с самодийским народом.</p>
+                        <div class="details">
+                            <ul>
+                                <li><strong>Мункаси</strong> — энецкий род.</li>
+                                <li><strong>Молгонзеи</strong> — русское название энцев в XVII в. (искажённое «Мункаси»).</li>
+                                <li><strong>Мангазея</strong> — город на реке Таз (1601 г.), названный по молгонзеям.</li>
+                            </ul>
+                        </div>
+                        <div class="btn-row">
+                            <button class="speak-btn" data-speak="Молгонзеи и Мангазея. Один из немногих топонимов Сибири, напрямую связанных с самодийским народом. Цепочка этимологии. Мункаси — название энецкого рода. От него — земля рода Мункаси. Молгонзеи — так энцев называли в русских документах семнадцатого века, искажённое Мункаси. Мангазея — русский город на реке Таз, основан в 1601 году, названный по молгонзеям. Позже имя перешло на магазин в Красноярске как исторический бренд. Таким образом, Мангазея — не тюркское ханство и не абстрактное племя, а конкретное энецкое родовое имя, зафиксированное в русских источниках.">
+                                <svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+                                Озвучить
+                            </button>
+                            <button class="stop-btn" disabled><svg viewBox="0 0 24 24"><path d="M6 6h12v12H6z"/></svg> Стоп</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Письменность -->
+        <div id="sub-pismo" class="sub-content">
+            <div class="branch" style="border-left-color: #a080a0; background: #efe4e0;">
+                <div class="branch-title">📜 Письменность и алфавиты <span>арабская вязь · направления письма · Енисейская Сибирь</span></div>
+                <div class="cards">
+                    <div class="card wide" style="border-top-color: #9a8a6a;">
+                        <h3>Арабская вязь и Енисейская Сибирь <span class="status">контекст</span></h3>
+                        <p>Народы, жившие на территории Красноярского края (аринцы, пумпоколы, качинцы), не имели своей письменности. Однако они находились в тесном контакте с тюркоязычными соседями, которые использовали арабскую графику.</p>
+                        <div class="details">
+                            <strong>Кто был рядом и писал справа налево:</strong>
+                            <ul>
+                                <li><strong>Татары и башкиры</strong> (Поволжье и Урал) — до 1920-х годов использовали арабский алфавит.</li>
+                                <li><strong>Народы Средней Азии</strong> (казахи, киргизы, узбеки) — арабская графика была основной до советской латинизации.</li>
+                                <li><strong>Енисейские кыргызы</strong> — тюркоязычный народ, который собирал дань с аринцев и качинцев, также был частью этого культурного круга.</li>
+                            </ul>
+                            <p><strong>Географическая связь:</strong> Енисейская Сибирь была перекрёстком путей. Хотя местные народы не писали арабской вязью, они жили в мире, где арабское письмо было распространено у их соседей и торговых партнёров. Это важная часть культурного контекста, даже если сами аринцы или пумпоколы не оставили письменных памятников.</p>
+                        </div>
+                        <div class="btn-row">
+                            <button class="speak-btn" data-speak="Арабская вязь и Енисейская Сибирь. Народы, жившие на территории Красноярского края, аринцы, пумпоколы, качинцы, не имели своей письменности. Однако они находились в тесном контакте с тюркоязычными соседями, которые использовали арабскую графику. Татары и башкиры в Поволжье и на Урале до 1920-х годов использовали арабский алфавит. Народы Средней Азии, казахи, киргизы, узбеки, также писали арабской вязью до советской латинизации. Енисейские кыргызы, которые собирали дань с аринцев и качинцев, были частью этого культурного круга. Енисейская Сибирь была перекрёстком путей. Хотя местные народы не писали арабской вязью, они жили в мире, где арабское письмо было распространено у их соседей и торговых партнёров. Это важная часть культурного контекста.">
+                                <svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+                                Озвучить
+                            </button>
+                            <button class="stop-btn" disabled><svg viewBox="0 0 24 24"><path d="M6 6h12v12H6z"/></svg> Стоп</button>
+                        </div>
+                    </div>
+
+                    <div class="card wide">
+                        <h3>Арабская графика и направление справа налево</h3>
+                        <p>Среди народов бывшего СССР арабское письмо было распространено очень широко — в основном вместе с исламом.</p>
+                        <div class="details">
+                            <ul>
+                                <li><strong>Тюркские народы Поволжья и Урала:</strong> татары, башкиры — до 1920-х гг.</li>
+                                <li><strong>Дагестан и Северный Кавказ:</strong> аварцы, даргинцы, кумыки, лезгины и др. — местное письмо <strong>аджам</strong>.</li>
+                                <li><strong>Средняя Азия:</strong> узбеки, таджики, туркмены, казахи, киргизы — до советской латинизации.</li>
+                            </ul>
+                            <p><strong>Направление:</strong> арабская вязь пишется <strong>справа налево</strong>.</p>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3>Другие системы письма</h3>
+                        <div class="details">
+                            <ul>
+                                <li><strong>Древнеуйгурское письмо:</strong> вертикальное, сверху вниз, строки слева направо (IX–XIII вв.).</li>
+                                <li><strong>Монгольское письмо:</strong> вертикальное (сверху вниз), заимствовано у уйгуров в XIII в.</li>
+                                <li><strong>Аринский и пумпокольский:</strong> письменности не имели.</li>
+                                <li><strong>Кетский язык:</strong> современная письменность на кириллице.</li>
+                            </ul>
+                        </div>
+                        <div class="btn-row">
+                            <button class="speak-btn" data-speak="Другие системы письма у народов региона. Древнеуйгурское письмо: вертикальное, писали сверху вниз, строки шли слева направо. Использовалось в девятом — тринадцатом веках, позже было вытеснено арабским алфавитом. Монгольское письмо: также вертикальное, сверху вниз, было заимствовано у уйгуров в тринадцатом веке. Аринский и пумпокольский языки письменности не имели. Это были бесписьменные языки, известные только по записям исследователей восемнадцатого века. Кетский язык: современная письменность на кириллице, создана в советское время.">
+                                <svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+                                Озвучить
+                            </button>
+                            <button class="stop-btn" disabled><svg viewBox="0 0 24 24"><path d="M6 6h12v12H6z"/></svg> Стоп</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Топонимика -->
+        <div id="sub-toponimika" class="sub-content">
+            <div class="branch" style="border-left-color: #b5a48e; background: #efe7db;">
+                <div class="branch-title">📌 Топонимика и важные уточнения</div>
+                <div class="cards">
+                    <div class="card wide" style="border-top-color: #a08060;">
+                        <h3>Изыр-Су → Кача <span class="status">этимология</span></h3>
+                        <p>Современное название реки Кача имеет прямую связь с народом качинцев и их древним самоназванием.</p>
+                        <div class="photo-container">
+                            <img src="https://img1.liveinternet.ru/images/attach/c/0/52/6/52006622_004.jpg" alt="Табличка р. Кача (Изыр-Су)">
+                            <div class="photo-caption">Памятная табличка: р. Кача (Изыр-Су)</div>
+                        </div>
+                        <div class="details">
+                            <ul>
+                                <li><strong>Изыр-Су</strong> — древнее тюркское название реки.</li>
+                                <li><strong>Изыр-кичи</strong> — самоназвание людей («кичи» — люди).</li>
+                                <li><strong>Качи</strong> — русское искажение «кичи».</li>
+                                <li><strong>Качинцы</strong> — народ, река стала <strong>Качей</strong>.</li>
+                            </ul>
+                        </div>
+                        <div class="joke-box">
+                            <strong>😄 А мог бы быть Качинск?</strong><br>
+                            Если бы Красноярск назвали в честь реки Качи, он мог бы зваться <strong>Качинском</strong>. Но звучит это подозрительно похоже на <strong>Ачинск</strong> — и вот тут начинается самая настоящая сибирская путаница! Оба названия восходят к тюркским родоплеменным группам.
+                        </div>
+                        <div class="details" style="border-left-color: #8a9a6a;">
+                            <strong>🤝 Связь с Ачинском</strong>
+                            <ul>
+                                <li><strong>Кача:</strong> от «изыр-кичи» (люди) → «качи» → качинцы и река Кача.</li>
+                                <li><strong>Ачинск:</strong> от тюркской группы <strong>ачи, ачиги</strong> («ачинские татары»). Острог 1641 года назван по племени.</li>
+                            </ul>
+                        </div>
+                        <div class="btn-row">
+                            <button class="speak-btn" data-speak="Изыр-Су и Кача. На памятной табличке написано: река Кача, Изыр-Су. Татары, жившие вдоль реки Изыр-Су, называли себя Изыр-кичи, что значит кичи — люди. Татарское слово кичи оказалось неудобнопроизносимым для русских, прибывших на эти земли в начале семнадцатого века, и они заменили его на слово качи. Татар стали называть качинцами, а реку, на которой они обитали, — река Кача. А мог бы быть Качинск? Если бы Красноярск назвали в честь реки Качи, он мог бы зваться Качинском. Но звучит это подозрительно похоже на Ачинск — и вот тут начинается самая настоящая сибирская путаница! Оба названия восходят к тюркским родоплеменным группам. Связь с Ачинском: Кача — от тюркского изыр-кичи, что значит люди. Ачинск — от тюркской родоплеменной группы ачи, ачиги, группы хакасов, которых также называли ачинскими татарами. Ачинский острог, заложенный в 1641 году, получил название от проживавшего в тех местах племени.">
+                                <svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+                                Озвучить
+                            </button>
+                            <button class="stop-btn" disabled><svg viewBox="0 0 24 24"><path d="M6 6h12v12H6z"/></svg> Стоп</button>
+                        </div>
+                    </div>
+
+                    <div class="card wide" style="border-top-color: #7a9a6a;">
+                        <h3>Река Кача сегодня <span class="status">современный вид</span></h3>
+                        <p>Сегодня Кача — это благоустроенная городская река с набережной, велодорожками и арт-объектами.</p>
+                        <div class="photo-container">
+                            <img src="https://gorodprima.ru/wp-content/uploads/2017/12/IMG_044211.jpg" alt="Современная набережная реки Кача">
+                            <div class="photo-caption">Современная набережная реки Кача в Красноярске</div>
+                        </div>
+                        <div class="btn-row">
+                            <button class="speak-btn" data-speak="Река Кача сегодня. Сегодня Кача — это благоустроенная городская река с набережной, велодорожками и арт-объектами. На фотографии видна современная набережная реки Кача в Красноярске. Она стала местом отдыха горожан.">
+                                <svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+                                Озвучить
+                            </button>
+                            <button class="stop-btn" disabled><svg viewBox="0 0 24 24"><path d="M6 6h12v12H6z"/></svg> Стоп</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- ЧАСТЬ 2: ИНТЕРЕСНЫЕ ФАКТЫ -->
+    <!-- ========================================== -->
+    <div id="main-facts" class="main-content">
+        <div class="sub-tabs">
+            <button class="sub-tab-btn active" data-sub="fact-paris">🌉 Париж</button>
+            <button class="sub-tab-btn" data-sub="fact-washington">📚 Вашингтон</button>
+            <button class="sub-tab-btn" data-sub="fact-records">🏆 Рекорды</button>
+        </div>
+
+        <!-- Париж -->
+        <div id="fact-paris" class="sub-content active">
+            <div class="card wide">
+                <h2>🌉 Что общего между Красноярском и Парижем</h2>
+                <p>Оба города связаны с инженерными шедеврами, которые получили высшую награду на Всемирной выставке в Париже. Правда, с разницей в 11 лет.</p>
+
+                <div class="photo-row">
+                    <div class="photo-item">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/Eiffel_Tower_from_the_Trocadero%2C_Paris%2C_France.jpg/800px-Eiffel_Tower_from_the_Trocadero%2C_Paris%2C_France.jpg" alt="Эйфелева башня">
+                        <div class="photo-caption">Эйфелева башня, Париж (1889)</div>
+                    </div>
+                    <div class="photo-item">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/Krasnoyarsk_Railway_Bridge_1899.jpg/800px-Krasnoyarsk_Railway_Bridge_1899.jpg" alt="Красноярский железнодорожный мост">
+                        <div class="photo-caption">Красноярский железнодорожный мост (1899)</div>
+                    </div>
+                </div>
+
+                <div class="details">
+                    <strong>🏅 Золотая медаль для обоих:</strong>
+                    <ul>
+                        <li>В <strong>1889 году</strong> на Всемирной выставке в Париже Гюстав Эйфель получил золотую медаль за свою башню. Она стала символом Парижа.</li>
+                        <li>В <strong>1900 году</strong> на следующей Всемирной выставке в Париже уменьшенная модель Красноярского моста через Енисей была удостоена <strong>золотой медали</strong> «За архитектурное совершенство и великолепное техническое исполнение». Комитет выставки возглавлял сам Гюстав Эйфель.</li>
+                    </ul>
+                    <p>Так Эйфелева башня «передала» красноярскому мосту переходящее звание выдающегося сооружения.</p>
+                </div>
+
+                <div class="details" style="border-left-color: #a08060;">
+                    <strong>🌊 Река с характером и 52-кратный запас прочности:</strong>
+                    <p>Инженеры долго сомневались, что мост через Енисей вообще можно построить: река течёт с юга на север на 3,5 тыс. км, весной ледоход меняет очертания островов и берегов. До конца XIX века на Енисее не было ни одного моста.</p>
+                    <p>Профессор <strong>Лавр Проскуряков</strong> спроектировал мост с пролётами до <strong>140 метров</strong> — таких в России тогда не строили. Руководивший работами инженер <strong>Евгений Кнорре</strong> применил деревянные кессоны (из-за задержек металла) и технологию работы в ледовой шахте. Он писал: «Мост через реку Енисей мной заложен с запасом прочности в 52 раза, дабы Бог и потомки никогда не сказали обиды мне».</p>
+                    <p>Строительство велось вручную: фермы высотой с многоэтажный дом двигали по рельсам с помощью пяти лебёдок, на каждую из которых приходилось по четыре работника. 28 марта 1899 года мост торжественно открыли.</p>
+                </div>
+
+                <div class="details" style="border-left-color: #8a9a6a;">
+                    <strong>🔩 О молотобойцах и заклёпках:</strong>
+                    <p>Работа была изнурительной и опасной. Точных данных о том, что молотобойцам платили больше, но они умирали, в открытых источниках нет. Однако масштаб ручного труда и условия (кессоны, ледовые шахты) говорят о том, что работа была на пределе человеческих возможностей.</p>
+                    <p><strong>Что осталось сейчас:</strong> В 1930-е рядом построили дублёр, на рубеже XX–XXI веков возвели третий мост, а самый первый разобрали. Сохранился лишь короткий участок конструкций конца XIX века у правого берега Енисея и часть ледорезных устоев. Памятника «величию» этого инженерного решения нет — только исторические фотографии и память.</p>
+                </div>
+
+                <div class="btn-row">
+                    <button class="speak-btn" data-speak="Что общего между Красноярском и Парижем. Оба города связаны с инженерными шедеврами, которые получили высшую награду на Всемирной выставке в Париже. В 1889 году Гюстав Эйфель получил золотую медаль за свою башню. В 1900 году на следующей Всемирной выставке в Париже уменьшенная модель Красноярского моста через Енисей была удостоена золотой медали за архитектурное совершенство и великолепное техническое исполнение. Комитет выставки возглавлял сам Гюстав Эйфель. Река с характером и 52-кратный запас прочности. Инженеры долго сомневались, что мост через Енисей вообще можно построить: река течёт с юга на север на три с половиной тысячи километров, весной ледоход меняет очертания островов и берегов. До конца девятнадцатого века на Енисее не было ни одного моста. Профессор Лавр Проскуряков спроектировал мост с пролётами до ста сорока метров. Руководивший работами инженер Евгений Кнорре применил деревянные кессоны и технологию работы в ледовой шахте. Он писал: Мост через реку Енисей мной заложен с запасом прочности в пятьдесят два раза, дабы Бог и потомки никогда не сказали обиды мне. Строительство велось вручную: фермы высотой с многоэтажный дом двигали по рельсам с помощью пяти лебёдок, на каждую из которых приходилось по четыре работника. Двадцать восьмого марта тысяча восемьсот девяносто девятого года мост торжественно открыли. Работа была изнурительной и опасной. Самый первый мост был разобран на рубеже двадцатого и двадцать первого веков. Сохранился лишь небольшой участок конструкций конца девятнадцатого века у правого берега Енисея и часть ледорезных устоев.">
+                        <svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+                        Озвучить
+                    </button>
+                    <button class="stop-btn" disabled><svg viewBox="0 0 24 24"><path d="M6 6h12v12H6z"/></svg> Стоп</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Вашингтон -->
+        <div id="fact-washington" class="sub-content">
+            <div class="card wide">
+                <h2>📚 Что общего у Красноярска и Вашингтона</h2>
+                <p>Связь между сибирским городом и столицей США — это история одной из величайших частных библиотек в мире, которую собрал красноярский купец Геннадий Юдин.</p>
+
+                <div class="photo-row">
+                    <div class="photo-item">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/64/Library_of_Congress%2C_Thomas_Jefferson_Building.jpg/800px-Library_of_Congress%2C_Thomas_Jefferson_Building.jpg" alt="Библиотека Конгресса США">
+                        <div class="photo-caption">Библиотека Конгресса США, Вашингтон</div>
+                    </div>
+                    <div class="photo-item">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Krasnoyarsk_Regional_Library.jpg/800px-Krasnoyarsk_Regional_Library.jpg" alt="ГУНБ Красноярского края">
+                        <div class="photo-caption">ГУНБ Красноярского края, Красноярск</div>
+                    </div>
+                </div>
+
+                <div class="details">
+                    <strong>📖 История Юдинской библиотеки:</strong>
+                    <ul>
+                        <li><strong>Геннадий Васильевич Юдин</strong> (1840–1912) — красноярский купец и библиофил. Собрал одну из крупнейших частных библиотек дореволюционной России.</li>
+                        <li>В 1907 году продал собрание (около 81 000 томов) в <strong>Библиотеку Конгресса США</strong> в Вашингтоне.</li>
+                        <li>Вторая, домашняя библиотека (около 10–15 тыс. томов) осталась в Красноярске. Сегодня хранится в <strong>ГУНБ Красноярского края</strong>.</li>
+                    </ul>
+                    <p>Книжное наследие одного красноярского купца оказалось разделено между двумя столицами — Красноярском и Вашингтоном.</p>
+                </div>
+
+                <div class="btn-row">
+                    <button class="speak-btn" data-speak="Что общего у Красноярска и Вашингтона. Связь между сибирским городом и столицей США — это история одной из величайших частных библиотек в мире, которую собрал красноярский купец Геннадий Юдин. Геннадий Васильевич Юдин, 1840–1912, красноярский купец, винокуренный заводчик и библиофил. Он собрал одну из крупнейших частных библиотек дореволюционной России. В 1907 году Юдин продал своё собрание, около восьмидесяти одной тысячи томов, в Библиотеку Конгресса США в Вашингтоне. Там оно стало ядром славянского отдела. Вторая, домашняя библиотека Юдина, около десяти тысяч томов, осталась в Красноярске. Сегодня она хранится в фондах Государственной универсальной научной библиотеки Красноярского края. Таким образом, книжное наследие одного красноярского купца оказалось разделено между двумя столицами — Красноярском и Вашингтоном.">
+                        <svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+                        Озвучить
+                    </button>
+                    <button class="stop-btn" disabled><svg viewBox="0 0 24 24"><path d="M6 6h12v12H6z"/></svg> Стоп</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Рекорды -->
+        <div id="fact-records" class="sub-content">
+            <div class="card wide">
+                <h2>🏆 Красноярск — самый</h2>
+                <p>Красноярск не раз попадал в Книгу рекордов России благодаря своим масштабным объектам.</p>
+
+                <div class="details">
+                    <strong>🎄 Самая высокая ёлка в России</strong>
+                    <p>Главная новогодняя ёлка Красноярска на острове Татышев достигает <strong>55 метров</strong>. Она официально считается самой высокой в стране.</p>
+                </div>
+
+                <div class="details" style="border-left-color: #8a9a6a;">
+                    <strong>🪜 Самая длинная лестница в России</strong>
+                    <p><strong>Торгашинская лестница</strong> насчитывает <strong>1683 ступени</strong>, её протяжённость — <strong>1200 метров</strong>, а перепад высот — 240 метров. Соединяет заповедник «Красноярские Столбы» и Торгашинский хребет.</p>
+                </div>
+
+                <div class="details" style="border-left-color: #a08060;">
+                    <strong>🚩 Самый высокий флагшток в России</strong>
+                    <p>100-метровый флагшток на Николаевской сопке был признан самым высоким в стране. Он оборудован автоматикой, которая сама приспускает флаг при сильном ветре.</p>
+                </div>
+
+                <div class="btn-row">
+                    <button class="speak-btn" data-speak="Красноярск — самый. Красноярск не раз попадал в Книгу рекордов России благодаря своим масштабным объектам. Самая высокая ёлка в России. Главная новогодняя ёлка Красноярска на острове Татышев достигает пятидесяти пяти метров. Она официально считается самой высокой в стране. Самая длинная лестница в России. Торгашинская лестница насчитывает тысячу шестьсот восемьдесят три ступени, её протяжённость — тысяча двести метров, а перепад высот — двести сорок метров. Она соединяет заповедник Красноярские Столбы и Торгашинский хребет. Самый высокий флагшток в России. Стометровый флагшток на Николаевской сопке был признан самым высоким в стране.">
+                        <svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+                        Озвучить
+                    </button>
+                    <button class="stop-btn" disabled><svg viewBox="0 0 24 24"><path d="M6 6h12v12H6z"/></svg> Стоп</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            // --- Переключение главных вкладок ---
+            const mainBtns = document.querySelectorAll('.main-tab-btn');
+            const mainContents = document.querySelectorAll('.main-content');
+            mainBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    mainBtns.forEach(b => b.classList.remove('active'));
+                    mainContents.forEach(c => c.classList.remove('active'));
+                    this.classList.add('active');
+                    document.getElementById(this.dataset.main).classList.add('active');
+                    stopSpeech();
+                });
+            });
+
+            // --- Переключение внутренних вкладок ---
+            const subBtns = document.querySelectorAll('.sub-tab-btn');
+            const subContents = document.querySelectorAll('.sub-content');
+            subBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    subBtns.forEach(b => b.classList.remove('active'));
+                    subContents.forEach(c => c.classList.remove('active'));
+                    this.classList.add('active');
+                    document.getElementById(this.dataset.sub).classList.add('active');
+                    stopSpeech();
+                });
+            });
+
+            // --- Озвучка ---
+            if (!window.speechSynthesis) { alert('Ваш браузер не поддерживает синтез речи. Попробуйте Chrome.'); return; }
+            const voiceSelect = document.getElementById('voiceSelect');
+            let currentUtterance = null;
+            let currentBtn = null;
+            let voicesLoaded = false;
+
+            function stopSpeech() {
+                if (window.speechSynthesis) {
+                    window.speechSynthesis.cancel();
+                }
+                document.querySelectorAll('.speak-btn').forEach(b => b.classList.remove('speaking'));
+                document.querySelectorAll('.stop-btn').forEach(b => b.disabled = true);
+                currentBtn = null;
+                currentUtterance = null;
+            }
+
+            function populateVoices() {
+                const voices = window.speechSynthesis.getVoices();
+                if (!voices.length) return false;
+                voiceSelect.innerHTML = '';
+                const ruVoices = voices.filter(v => v.lang.toLowerCase().startsWith('ru'));
+                const otherVoices = voices.filter(v => !v.lang.toLowerCase().startsWith('ru'));
+                const googleRuVoice = ruVoices.find(v => v.name.toLowerCase().includes('google'));
+
+                function makeOption(voice, isGoogle) {
+                    const opt = document.createElement('option');
+                    opt.value = voice.name;
+                    opt.dataset.lang = voice.lang;
+                    const name = (voice.name || '').toLowerCase();
+                    const male = ['male', 'муж', 'yuri', 'dmitry', 'pavel', 'artem', 'maxim', 'aleksandr', 'sergey', 'andrey'];
+                    const female = ['female', 'жен', 'milena', 'elena', 'anna', 'maria', 'olga', 'tatiana', 'irina', 'svetlana'];
+                    let icon = '·';
+                    if (male.some(k => name.includes(k))) icon = '♂';
+                    else if (female.some(k => name.includes(k))) icon = '♀';
+                    const star = isGoogle ? '⭐ ' : '';
+                    opt.textContent = `${star}${icon} ${voice.name} (${voice.lang})`;
+                    return opt;
+                }
+
+                if (ruVoices.length) {
+                    const ruGroup = document.createElement('optgroup');
+                    ruGroup.label = '🇷🇺 Русские голоса';
+                    [...ruVoices].sort((a, b) => (a.name.toLowerCase().includes('google') ? 0 : 1) - (b.name.toLowerCase().includes('google') ? 0 : 1)).forEach(v => ruGroup.appendChild(makeOption(v, v.name.toLowerCase().includes('google'))));
+                    voiceSelect.appendChild(ruGroup);
+                }
+                if (otherVoices.length) {
+                    const otherGroup = document.createElement('optgroup');
+                    otherGroup.label = '🌍 Другие языки';
+                    otherVoices.slice(0, 20).forEach(v => otherGroup.appendChild(makeOption(v, false)));
+                    voiceSelect.appendChild(otherGroup);
+                }
+                if (googleRuVoice) voiceSelect.value = googleRuVoice.name;
+                else if (ruVoices.length) voiceSelect.value = ruVoices[0].name;
+                else if (voices.length) voiceSelect.value = voices[0].name;
+                voicesLoaded = true;
+                return true;
+            }
+
+            if (!populateVoices()) {
+                window.speechSynthesis.onvoiceschanged = () => { if (!voicesLoaded) populateVoices(); };
+                setTimeout(() => { if (!voicesLoaded) populateVoices(); }, 500);
+            }
+
+            function getSelectedVoice() {
+                const name = voiceSelect.value;
+                if (!name) return null;
+                return window.speechSynthesis.getVoices().find(v => v.name === name) || null;
+            }
+
+            document.querySelectorAll('.speak-btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const text = this.getAttribute('data-speak');
+                    if (!text) return;
+                    if (window.speechSynthesis.speaking || window.speechSynthesis.pending) window.speechSynthesis.cancel();
+                    document.querySelectorAll('.speak-btn').forEach(b => b.classList.remove('speaking'));
+                    document.querySelectorAll('.stop-btn').forEach(b => b.disabled = true);
+                    const utterance = new SpeechSynthesisUtterance(text);
+                    const selectedVoice = getSelectedVoice();
+                    if (selectedVoice) { utterance.voice = selectedVoice; utterance.lang = selectedVoice.lang; }
+                    else { utterance.lang = 'ru-RU'; }
+                    utterance.rate = 0.95; utterance.pitch = 1;
+                    const btnRow = this.closest('.btn-row');
+                    const stopBtn = btnRow ? btnRow.querySelector('.stop-btn') : null;
+                    this.classList.add('speaking');
+                    if (stopBtn) stopBtn.disabled = false;
+                    currentUtterance = utterance; currentBtn = this;
+                    utterance.onend = () => { if (currentBtn === btn) stopSpeech(); };
+                    utterance.onerror = () => { if (currentBtn === btn) stopSpeech(); };
+                    window.speechSynthesis.speak(utterance);
+                });
+            });
+
+            document.querySelectorAll('.stop-btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    stopSpeech();
+                });
+            });
+
+            window.addEventListener('beforeunload', () => { if (window.speechSynthesis) window.speechSynthesis.cancel(); });
+        })();
+    </script>
+</body>
+</html>
